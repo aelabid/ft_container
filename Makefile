@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aelabid <aelabid@student.42.fr>            +#+  +:+       +#+         #
+#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/16 07:22:21 by aelabid           #+#    #+#              #
-#    Updated: 2023/01/17 10:21:35 by aelabid          ###   ########.fr        #
+#    Updated: 2023/01/30 22:36:01 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ CC = c++
 all : $(NAME)
 
 
-%.o: %.c includes/containers.h
+%.o: %.c 
 	$(CC) $(CFLAGS) -c $< -o $@
 	
 $(NAME) : $(OBJ)

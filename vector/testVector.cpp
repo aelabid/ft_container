@@ -1,8 +1,15 @@
 #include"../includes/vector.hpp"
-
+// #include<vector>
 int main()
 {
-    vector<int> first;
+    // std::vector<int> first(4,10);
+    vector<int> second (4,10);
+    // first[0]=5;
+    // second[0]=5;
+    for (int i = 0; i < 4; i++) {
+        // std::cout<<"first = " << first[i] << " ";
+        std::cout <<"second = "<< second[i] << " ";
+    }
     // std::vector<int> first;
     // std::vector<int> second (4,100);
     // std::cout<< first;
