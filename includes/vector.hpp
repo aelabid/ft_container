@@ -23,6 +23,9 @@ class vector
         // ------------------------ default constructor ------------------------ //
         explicit vector (const allocator_type& alloc = allocator_type())        {
             // std::cout<<"constructor called";
+          this->_alloc = alloc;
+          this->_size = 0;
+          this->_capacity = 0;
         };
 
         // ------------------------ fill constructor ------------------------ //
@@ -30,29 +33,65 @@ class vector
         {
         this->_alloc = alloc;
         this->_size = n;
+        this->_capacity = n;
         this->_vector = this->_alloc.allocate(n);
         for (size_type i = 0; i < n; i++)
-            this->_alloc.construct(this->_vector + i, val);
+            this->_alloc.construct(&this->_vector[i], val);
         }
 
         // ------------------------ range constructor ------------------------ //
-        template <class InputIterator>
-        vector (InputIterator first, InputIterator last,                 const allocator_type& alloc = allocator_type())
+        template <typename InputIterator>
+        vector (InputIterator first, InputIterator last,                 const allocator_type& alloc = allocator_type(), typename std::enable_if<!std::is_integral<InputIterator>::value>::type* = 0)
         {
-            // cout<<"here";
             this->_alloc = alloc;
             this->_size = last - first;
             this->_vector = this->_alloc.allocate(this->_size);
             for (size_type i = 0; i < this->_size; i++)
-                this->_alloc.construct(this->_vector + i, *(first++));
+            {
+              this->_alloc.construct(&this->_vector[i], *first);
+              first++;
+            }
         }
-
-
-
+        // ------------------------ copy constructor ------------------------ //
+        vector (const vector& x)
+        {
+            this->_capacity = x._capacity;
+            this->_alloc = x._alloc;
+            this->_size = x._size;
+            this->_vector = this->_alloc.allocate(this->_size);
+            for(size_type i = 0; i < this->_size; i++)
+                this->_alloc.construct(&this->_vector[i], x._vector[i]);
+        }
+        // ------------------------ Destructor ------------------------ //
+        ~vector ()
+        {
+            if(!this->_vector)
+                return ;
+            for(size_type i = 0; i < this->_size; i++)
+                this->_alloc.destroy(&this->_vector[i]);
+            this->_alloc.deallocate(this->_vector, this->_size);
+        }
     // ------------------------Operator Overloading------------------------ //
+        vector& operator= (const vector& x)
+        {
+            this->_capacity = x._capacity;
+            this->_size = x._size;
+            for(size_type i = 0; i < this->_size; i++)
+                this->_alloc.destroy(&this->_vector[i]);
+            this->_alloc.deallocate(this->_vector, this->_size);
+            this->_alloc.allocate(x._size);
+            for (size_type i = 0; i < this->_size; i++)
+                this->_alloc.construct(&this->_vector[i], x._vector[i]);
+        }
         reference operator[](size_type n) { return this->_vector[n]; }
         const_reference operator[](size_type n) const{ return this->_vector[n]; }
 
+    // ------------------------Operator Overloading------------------------ //
+        // iterator begin()
+        // {
+        //     return (this->_vector)
+        // }
+    
     // ------------------------Private------------------------ //
         private:
             size_type _size;
