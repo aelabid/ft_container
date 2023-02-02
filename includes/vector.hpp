@@ -74,6 +74,9 @@ class vector
     // ------------------------Operator Overloading------------------------ //
         vector& operator= (const vector& x)
         {
+            // Guard self assignment
+            if (this == &x)
+                return *this;
             this->_capacity = x._capacity;
             this->_size = x._size;
             for(size_type i = 0; i < this->_size; i++)
