@@ -1,6 +1,6 @@
 #pragma once
 # include "containers.hpp"
-
+#include"../iterators/vector_it.hpp"
 template < class T, class Alloc = std::allocator<T> > 
 class vector
 {
@@ -12,7 +12,7 @@ class vector
         typedef const value_type&                     const_reference;
         typedef value_type*                           pointer;
         // typedef const value_type*                     const_pointer;
-        // typedef MyIterator<value_type>                iterator;
+        typedef MyRandomAccessIterator<value_type>                iterator;
         // typedef MyConstIterator<value_type>           const_iterator;
         // typedef std::reverse_iterator<iterator>       reverse_iterator;
         // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -90,10 +90,10 @@ class vector
         const_reference operator[](size_type n) const{ return this->_vector[n]; }
 
     // ------------------------Operator Overloading------------------------ //
-        // iterator begin()
-        // {
-        //     return (this->_vector)
-        // }
+        iterator begin()
+        {
+            return (iterator(this->_vector));
+        }
     
     // ------------------------Private------------------------ //
         private:

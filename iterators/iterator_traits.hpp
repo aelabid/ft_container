@@ -5,7 +5,7 @@ template <class Category, class T, class Distance = ptrdiff_t,
           class Pointer = T*, class Reference = T&>
     struct iterator {
         typedef Category iterator_category;
-        typedef Type value_type;
+        typedef T value_type;
         typedef Distance difference_type;
         typedef Distance distance_type;
         typedef Pointer pointer;
