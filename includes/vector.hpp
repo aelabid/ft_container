@@ -13,9 +13,9 @@ class vector
         typedef value_type*                           pointer;
         // typedef const value_type*                     const_pointer;
         typedef MyRandomAccessIterator<value_type>                iterator;
-        // typedef MyConstIterator<value_type>           const_iterator;
-        // typedef std::reverse_iterator<iterator>       reverse_iterator;
-        // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef MyRandomAccessIterator<value_type>           const_iterator;
+        typedef std::reverse_iterator<iterator>       reverse_iterator;
+        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
         // typedef ptrdiff_t                             difference_type;
         typedef size_t                                size_type;
 
@@ -89,10 +89,26 @@ class vector
         reference operator[](size_type n) { return this->_vector[n]; }
         const_reference operator[](size_type n) const{ return this->_vector[n]; }
 
-    // ------------------------Operator Overloading------------------------ //
+    // ------------------------ Iterators ------------------------ //
         iterator begin()
         {
             return (iterator(this->_vector));
+        }
+        const_iterator begin()
+        {
+            return (const_iterator(this->_vector));
+        }
+        iterator end()
+        {
+            return (iterator(this->_vector + _size));
+        }
+        const_iterator end()
+        {
+            return (const_iterator(this->_vector + _size));
+        }
+        reverse_iterator rbegin()
+        {
+
         }
     
     // ------------------------Private------------------------ //

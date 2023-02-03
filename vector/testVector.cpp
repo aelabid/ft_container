@@ -2,17 +2,34 @@
 #include<vector>
 int main()
 {
-  std::vector<int> v(6, 20);
-  std::vector<int>::iterator it;
-  std::vector<int>:: iterator i;
-  std::vector<int>:: iterator j;
+  vector<int> v(6, 20);
+  vector<int> d(3, 2);
+  vector<int>::iterator it;
+  vector<int>:: iterator l;
+  vector<int>:: iterator j;
+  j=d.begin();
+  for(int i =0; i<6; i++)
+    v[i] = i+1;
   it = v.begin();
-  *it = 10;
-  // std::cout<<*it;
-  // it++;
-  i = ++it;
-  j = i -1;
-  std::cout << v[it + 2] << std::endl;
+  std::cout<<"this is it\n";
+  for(int i =0; i<6; i++)
+  {
+    std::cout<<*it<<'\t';
+    it++;
+  }
+  it = v.begin();
+  l = it + 2;
+  l = l + 2;
+  std::cout<<"\nthis is l - it\n"<<it-j;
+  // for(int k =0; k<2;k++)
+  // {
+  //   std::cout<<*l<<'\t';
+  //   l++;
+  // }
+  // *it = 10;
+  // i = ++it;
+  // j = i + 1;
+  // *j = 4;
   // std::cout<<*i--;
   // std::cout<<*j++;
   // std::cout<<*j;
