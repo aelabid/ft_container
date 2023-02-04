@@ -1,6 +1,6 @@
 #pragma once
 #include<cstddef>
-
+#include <iterator>
 template <class Category, class T, class Distance = ptrdiff_t,
           class Pointer = T*, class Reference = T&>
     struct iterator {

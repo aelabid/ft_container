@@ -1,23 +1,23 @@
 #pragma once
-# include "containers.hpp"
 #include"../iterators/vector_it.hpp"
+
 template < class T, class Alloc = std::allocator<T> > 
 class vector
 {
     public:
     // ------------------------Member Types------------------------ //
-        typedef T                                     value_type;
-        typedef std::allocator<value_type>            allocator_type;
-        typedef value_type&                           reference;
-        typedef const value_type&                     const_reference;
-        typedef value_type*                           pointer;
-        // typedef const value_type*                     const_pointer;
-        typedef MyRandomAccessIterator<value_type>                iterator;
-        typedef MyRandomAccessIterator<value_type>           const_iterator;
-        typedef std::reverse_iterator<iterator>       reverse_iterator;
-        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
-        // typedef ptrdiff_t                             difference_type;
-        typedef size_t                                size_type;
+        typedef T                                           value_type;
+        typedef std::allocator<value_type>                  allocator_type;
+        typedef value_type&                                 reference;
+        typedef const value_type&                           const_reference;
+        typedef value_type*                                 pointer;
+        // typedef const value_type*                        const_pointer;
+        typedef MyRandomAccessIterator<value_type>          iterator;
+        typedef MyRandomAccessIterator<const value_type>    const_iterator;
+        typedef my_rev_it<value_type>                       reverse_iterator;
+        typedef my_rev_it<const value_type>                 const_reverse_iterator;
+        // typedef ptrdiff_t                                difference_type;
+        typedef size_t                                      size_type;
 
     // -------------------------------Constructors-------------------------------------//
         // ------------------------ default constructor ------------------------ //
@@ -94,7 +94,7 @@ class vector
         {
             return (iterator(this->_vector));
         }
-        const_iterator begin()
+        const_iterator begin() const
         {
             return (const_iterator(this->_vector));
         }
@@ -102,15 +102,88 @@ class vector
         {
             return (iterator(this->_vector + _size));
         }
-        const_iterator end()
+        const_iterator end() const
         {
             return (const_iterator(this->_vector + _size));
         }
         reverse_iterator rbegin()
         {
-
+            return (reverse_iterator(this->_vector + _size));
         }
-    
+        const_reverse_iterator rbegin() const
+        {
+            return (const_reverse_iterator(this->_vector + _size));
+        }
+        reverse_iterator rend()
+        {
+            return (reverse_iterator(this->_vector));
+        }
+        const_reverse_iterator rend() const
+        {
+            return (const_reverse_iterator(this->_vector));
+        }
+    // ------------------------Capacity------------------------ //
+    size_type size() const
+    {
+        return _size;
+    }
+    size_type max_size() const
+    {
+        return (this->_alloc.max_size());
+    };
+    void resize (size_type n, value_type val = value_type())
+    {
+        if(n < _size)
+        {
+            for (size_t i = n; i < _size; i++)
+                _alloc.destroy(&_vector[i]);
+        }
+        else if (n > _capacity)
+        {
+            value_type *tmp = _alloc.allocate(n);
+            for (int i=0; i<_size; i++)
+            {
+                _alloc.construct(&tmp[i], _vector[i]);
+                _alloc.destroy(&_vector[i]);
+            }
+            _alloc.deallocate(_vector, _size);
+            _vector = tmp;
+            _size = n;
+            _capacity = n;
+        }
+        else if (n>_size)
+        {
+            for (size_t i = _size; i < n; i++)
+                _alloc.construct(&_vector[i], val);
+        }
+        _size = n;
+        _capacity = n;
+    };
+    size_type capacity() const
+    {
+        return _capacity;
+    }
+    bool empty() const
+    {
+        return (_size == 0);
+    }
+    void reserve (size_type n)
+    {
+        if (n > _capacity)
+        {
+            value_type *tmp = _alloc.allocate(n);
+            for (int i=0; i<_size; i++)
+            {
+                _alloc.construct(&tmp[i], _vector[i]);
+                _alloc.destroy(&_vector[i]);
+            }
+            for (int i=_size; i<n; i++)
+                _alloc.construct(&tmp[i], value_type());
+            _alloc.deallocate(_vector, _size);
+            _vector = tmp;
+            _capacity = n;
+        }
+    }
     // ------------------------Private------------------------ //
         private:
             size_type _size;

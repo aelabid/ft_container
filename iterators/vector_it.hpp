@@ -107,27 +107,27 @@ public:
 };
 
 template<typename T>
-class MyRevIter
+class my_rev_it
 {
 public:
-    typedef typename MyRandomAccessIterator<T>                       iterator_type;
+    typedef T                                               iterator_type;
     typedef typename iterator_traits<T>::iterator_category iterator_category;
     typedef typename iterator_traits<T>::value_type        value_type;
     typedef typename iterator_traits<T>::difference_type   difference_type;
     typedef typename iterator_traits<T>::pointer            pointer;
     typedef typename iterator_traits<T>::reference         reference;
 
-    MyRevIter(){};
+    my_rev_it(){};
     template <class Iter> 
-    MyRevIter (const MyRevIter<Iter>& rev_it)
+    my_rev_it (const my_rev_it<Iter>& rev_it)
     {
         *this = rev_it;
     };
-    explicit MyRevIter (iterator_type it){ _crt = it; };
-    ~MyRevIter(){};
+    explicit my_rev_it (iterator_type it){ _crt = it; };
+    ~my_rev_it(){};
 
     iterator_type base() const {
-            return _crt;
+        return _crt;
     }
     // ------------------------Operator Overloading------------------------ //
     T& operator*() const
@@ -138,35 +138,35 @@ public:
     {
         return &(operator*());
     }
-    MyRevIter &operator++()
+    my_rev_it &operator++()
     {
         _crt--;
         return *this;
     }
-    MyRevIter operator++(int)
+    my_rev_it operator++(int)
     {
-        MyRevIter tmp(_crt);
+        my_rev_it tmp(_crt);
         _crt--;
         return tmp;
     }
-    MyRevIter &operator--()
+    my_rev_it &operator--()
     {
         _crt++;
         return *this;
     }
-    MyRevIter operator--(int)
+    my_rev_it operator--(int)
     {
-        MyRevIter tmp(_crt);
+        my_rev_it tmp(_crt);
         _crt--;
         return tmp;
     }
-    MyRevIter operator+(difference_type a) const
+    my_rev_it operator+(difference_type a) const
     {
-        return MyRevIter(_crt - a);
+        return my_rev_it(_crt - a);
     }
-    MyRevIter operator-(difference_type a) const
+    my_rev_it operator-(difference_type a) const
     {
-        return MyRevIter(_crt + a);
+        return my_rev_it(_crt + a);
     }
     void operator+=(difference_type a)
     {
@@ -181,5 +181,53 @@ public:
         return base()[-a-1];
     }
     private:
-        T       _crt;
+        iterator_type       _crt;
+};
+
+template <class Iterator>  
+bool operator== (const my_rev_it<Iterator>& lhs, const my_rev_it<Iterator>& rhs)
+{
+    return lhs.base() == rhs.base();
+};
+
+template <class Iterator>
+bool operator!= (const my_rev_it<Iterator>& lhs,                   const my_rev_it<Iterator>& rhs)
+{
+    return lhs.base() != rhs.base();
+};
+
+template <class Iterator>
+bool operator<  (const my_rev_it<Iterator>& lhs,                   const my_rev_it<Iterator>& rhs)
+{
+    return lhs.base() < rhs.base();
+};
+
+template <class Iterator>
+bool operator<=  (const my_rev_it<Iterator>& lhs,                   const my_rev_it<Iterator>& rhs)
+{
+    return lhs.base() <= rhs.base();
+};
+
+template <class Iterator>
+bool operator>  (const my_rev_it<Iterator>& lhs,                   const my_rev_it<Iterator>& rhs)
+{
+    return lhs.base() > rhs.base();
+};
+
+template <class Iterator>
+bool operator>=  (const my_rev_it<Iterator>& lhs,                   const my_rev_it<Iterator>& rhs)
+{
+    return lhs.base() >= rhs.base();
+};
+
+template <class Iterator>
+my_rev_it<Iterator> operator+ (typename my_rev_it<Iterator>::difference_type n,             const my_rev_it<Iterator>& rev_it)
+{
+    return my_rev_it(rev_it - n);
+};
+
+template <class Iterator>  
+typename my_rev_it<Iterator>::difference_type operator- (    const my_rev_it<Iterator>& lhs,    const my_rev_it<Iterator>& rhs)
+{
+    return rhs - lhs;
 };
