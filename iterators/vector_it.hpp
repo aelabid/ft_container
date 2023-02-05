@@ -106,7 +106,7 @@ public:
         pointer _it;
 };
 
-template<typename T>
+template<class T>
 class my_rev_it
 {
 public:
@@ -223,8 +223,9 @@ bool operator>=  (const my_rev_it<Iterator>& lhs,                   const my_rev
 template <class Iterator>
 my_rev_it<Iterator> operator+ (typename my_rev_it<Iterator>::difference_type n,             const my_rev_it<Iterator>& rev_it)
 {
-    return my_rev_it(rev_it - n);
+    return my_rev_it<Iterator>(rev_it - n);
 };
+
 
 template <class Iterator>  
 typename my_rev_it<Iterator>::difference_type operator- (    const my_rev_it<Iterator>& lhs,    const my_rev_it<Iterator>& rhs)

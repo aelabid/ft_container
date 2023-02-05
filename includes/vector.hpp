@@ -1,5 +1,8 @@
 #pragma once
 #include"../iterators/vector_it.hpp"
+#include <stdexcept>
+#include<iostream>
+#include<climits>
 
 template < class T, class Alloc = std::allocator<T> > 
 class vector
@@ -26,6 +29,7 @@ class vector
           this->_alloc = alloc;
           this->_size = 0;
           this->_capacity = 0;
+          this->_vector = _alloc.allocate(0);
         };
 
         // ------------------------ fill constructor ------------------------ //
@@ -45,7 +49,8 @@ class vector
         {
             this->_alloc = alloc;
             this->_size = last - first;
-            this->_vector = this->_alloc.allocate(this->_size);
+            this->_capacity = _size;
+            this->_vector = this->_alloc.allocate(this->_capacity);
             for (size_type i = 0; i < this->_size; i++)
             {
               this->_alloc.construct(&this->_vector[i], *first);
@@ -58,18 +63,18 @@ class vector
             this->_capacity = x._capacity;
             this->_alloc = x._alloc;
             this->_size = x._size;
-            this->_vector = this->_alloc.allocate(this->_size);
+            this->_vector = this->_alloc.allocate(this->_capacity);
             for(size_type i = 0; i < this->_size; i++)
                 this->_alloc.construct(&this->_vector[i], x._vector[i]);
         }
         // ------------------------ Destructor ------------------------ //
         ~vector ()
         {
-            if(!this->_vector)
+            if(!this->_size)
                 return ;
             for(size_type i = 0; i < this->_size; i++)
                 this->_alloc.destroy(&this->_vector[i]);
-            this->_alloc.deallocate(this->_vector, this->_size);
+            this->_alloc.deallocate(this->_vector, this->_capacity);
         }
     // ------------------------Operator Overloading------------------------ //
         vector& operator= (const vector& x)
@@ -81,13 +86,12 @@ class vector
             this->_size = x._size;
             for(size_type i = 0; i < this->_size; i++)
                 this->_alloc.destroy(&this->_vector[i]);
-            this->_alloc.deallocate(this->_vector, this->_size);
-            this->_alloc.allocate(x._size);
+            this->_alloc.deallocate(this->_vector, this->_capacity);
+            this->_alloc.allocate(x._capacity);
             for (size_type i = 0; i < this->_size; i++)
                 this->_alloc.construct(&this->_vector[i], x._vector[i]);
         }
-        reference operator[](size_type n) { return this->_vector[n]; }
-        const_reference operator[](size_type n) const{ return this->_vector[n]; }
+        
 
     // ------------------------ Iterators ------------------------ //
         iterator begin()
@@ -146,7 +150,7 @@ class vector
                 _alloc.construct(&tmp[i], _vector[i]);
                 _alloc.destroy(&_vector[i]);
             }
-            _alloc.deallocate(_vector, _size);
+            _alloc.deallocate(_vector, _capacity);
             _vector = tmp;
             _size = n;
             _capacity = n;
@@ -179,15 +183,121 @@ class vector
             }
             for (int i=_size; i<n; i++)
                 _alloc.construct(&tmp[i], value_type());
-            _alloc.deallocate(_vector, _size);
+            _alloc.deallocate(_vector, _capacity);
             _vector = tmp;
             _capacity = n;
+            _size = n;
         }
     }
+    // ------------------------Element access------------------------ //
+        reference operator[](size_type n) 
+        { 
+            return this->_vector[n]; 
+        }
+        const_reference operator[](size_type n) const
+        { 
+            return this->_vector[n];
+        }
+        reference at (size_type n)
+        {
+            if(n>_size)
+                throw std::out_of_range("");
+            return (this->_vector[n]);
+        };
+        const_reference at (size_type n) const
+        {
+            if(n>_size)
+                throw std::out_of_range("");
+            return(this->_vector[n]);
+        };
+        reference front()
+        {
+            return _vector[0];
+        };
+        const_reference front() const
+        {
+            return _vector[0];
+
+        };
+        reference back()
+        {
+            return _vector[_size - 1];
+        };
+        const_reference back() const
+        {
+            return _vector[_size - 1];
+
+        };
+    // ------------------------Modifiers------------------------ //
+    template <class InputIterator>
+    void assign (InputIterator first, InputIterator last, typename std::enable_if<!std::is_integral<InputIterator>::value>::type* = 0)
+    {
+        size_type size = last - first;
+        if (size >= UINT_MAX)
+            throw std::length_error("");
+        reserve(size);
+        size_type i = 0;
+        while (i<size)
+        {
+            _alloc.destroy(&_vector[i]);
+            _alloc.construct(&_vector[i], *first);
+            first++;
+            i++;
+        }
+        _size = size;
+    };
+    void assign (size_type n, const value_type& val)
+    {
+        reserve(n);
+        size_type i =0;
+        while (i<n)
+        {
+            _alloc.destroy(&_vector[i]);
+            _alloc.construct(&_vector[i], val);
+            i++;
+        }
+        _size = n;
+    };
+    void push_back (const value_type& val)
+    {
+        size_type tmp = _size;
+        if(_size + 1 > _capacity)
+        {
+            reserve(_size + 1);
+            _alloc.destroy(&_vector[tmp]);
+            _capacity = (tmp==0) ? 1 : tmp *2;
+        }
+        _alloc.construct(&_vector[tmp], val);
+        _size = tmp + 1;
+    };
+    void pop_back()
+    {
+        if(_size)
+        {
+            _alloc.destroy(&_vector[_size]);
+            _size --;
+        }
+    };
+    iterator insert (iterator position, const value_type& val)
+    {
+        if( _size + 1 > _capacity)
+        {
+            _capacity = (_size == 0) ? 1 : _size * 2;
+            _vector = _alloc.allocate(_capacity);
+        }
+        _size++;
+        size_type dst = position - begin();
+        if (dst >= UINT_MAX)
+            throw std::length_error("");
+        pointer tmp = _alloc.allocate(dst, tmp);
+        std::cout<<"dst = "<<dst;
+        return position;
+    };
+
     // ------------------------Private------------------------ //
         private:
-            size_type _size;
-            allocator_type _alloc;
-            pointer _vector;
-            size_type _capacity;
+            size_type       _size;
+            allocator_type  _alloc;
+            pointer         _vector;
+            size_type       _capacity;
 };
