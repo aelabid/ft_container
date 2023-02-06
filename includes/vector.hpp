@@ -153,7 +153,7 @@ class vector
             _alloc.deallocate(_vector, _capacity);
             _vector = tmp;
             _size = n;
-            _capacity = n;
+            _capacity = (_size == 0) ? 1 : (_size-1) * 2;
         }
         else if (n>_size)
         {
@@ -161,7 +161,6 @@ class vector
                 _alloc.construct(&_vector[i], val);
         }
         _size = n;
-        _capacity = n;
     };
     size_type capacity() const
     {
@@ -185,8 +184,8 @@ class vector
                 _alloc.construct(&tmp[i], value_type());
             _alloc.deallocate(_vector, _capacity);
             _vector = tmp;
-            _capacity = n;
             _size = n;
+            _capacity = (_size == 0) ? 1 : (_size - 1) * 2;
         }
     }
     // ------------------------Element access------------------------ //
@@ -265,7 +264,7 @@ class vector
         {
             reserve(_size + 1);
             _alloc.destroy(&_vector[tmp]);
-            _capacity = (tmp==0) ? 1 : tmp *2;
+            _capacity = (tmp==0) ? 1 : tmp*2;
         }
         _alloc.construct(&_vector[tmp], val);
         _size = tmp + 1;
@@ -280,18 +279,47 @@ class vector
     };
     iterator insert (iterator position, const value_type& val)
     {
-        if( _size + 1 > _capacity)
-        {
-            _capacity = (_size == 0) ? 1 : _size * 2;
-            _vector = _alloc.allocate(_capacity);
-        }
-        _size++;
+        size_type m, t = _size;
         size_type dst = position - begin();
+        std::cout << "dst------>" << *(begin()) << std::endl;
+        std::cout << "position------>" << *(position) << std::endl;
+        std::cout << "dst------>" << (dst) << std::endl;
+        if(dst < _size)
+            m = _size+1;
+        else
+            m=dst+1; 
+        if(m > _capacity)
+        {
+            pointer temp = _alloc.allocate(6);
+            for (int i=0; i<_size; i++)
+            {
+                _alloc.construct(&temp[i], _vector[i]);
+                _alloc.destroy(&_vector[i]);
+            }
+            _alloc.deallocate(_vector, _capacity);
+            _vector = temp;
+            _size = (_size>dst)?_size+1 : dst+1;
+            _capacity = (t == 0) ? 1 : t * 2;
+        }
+        std::cout<<m<<"\n";
         if (dst >= UINT_MAX)
             throw std::length_error("");
-        pointer tmp = _alloc.allocate(dst, tmp);
-        std::cout<<"dst = "<<dst;
-        return position;
+        pointer tmp = _alloc.allocate(dst);
+        value_type tm;
+        size_type i;
+        for(i = _size; i > dst; i--)
+            _vector[i] = _vector[i - 1];
+        _alloc.destroy(&_vector[i]);
+        _alloc.construct(&_vector[i], val);
+        return  position;
+    };
+
+    void insert (iterator position, size_type n, const value_type& val)
+    {
+        // for (size_type i =0; i < n; i++)
+        // {
+        //     // position = insert(position, val);
+        // }
     };
 
     // ------------------------Private------------------------ //
