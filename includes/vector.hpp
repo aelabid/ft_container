@@ -90,6 +90,7 @@ class vector
             this->_alloc.allocate(x._capacity);
             for (size_type i = 0; i < this->_size; i++)
                 this->_alloc.construct(&this->_vector[i], x._vector[i]);
+            return(*this);
         }
         
 
@@ -281,27 +282,21 @@ class vector
     {
         size_type m, t = _size;
         size_type dst = position - begin();
-        std::cout << "dst------>" << *(begin()) << std::endl;
-        std::cout << "position------>" << *(position) << std::endl;
-        std::cout << "dst------>" << (dst) << std::endl;
         if(dst < _size)
             m = _size+1;
         else
             m=dst+1; 
-        if(m > _capacity)
+        pointer temp = _alloc.allocate(m);
+        for (int i=0; i<_size; i++)
         {
-            pointer temp = _alloc.allocate(6);
-            for (int i=0; i<_size; i++)
-            {
-                _alloc.construct(&temp[i], _vector[i]);
-                _alloc.destroy(&_vector[i]);
-            }
-            _alloc.deallocate(_vector, _capacity);
-            _vector = temp;
-            _size = (_size>dst)?_size+1 : dst+1;
-            _capacity = (t == 0) ? 1 : t * 2;
+            _alloc.construct(&temp[i], _vector[i]);
+            _alloc.destroy(&_vector[i]);
         }
-        std::cout<<m<<"\n";
+        _alloc.deallocate(_vector, _capacity);
+        _vector = temp;
+        _size = (_size>dst)?_size+1 : dst+1;
+        if(m>_capacity)
+        _capacity = (t == 0) ? 1 : t * 2;
         if (dst >= UINT_MAX)
             throw std::length_error("");
         pointer tmp = _alloc.allocate(dst);
@@ -311,21 +306,123 @@ class vector
             _vector[i] = _vector[i - 1];
         _alloc.destroy(&_vector[i]);
         _alloc.construct(&_vector[i], val);
-        return  position;
+        return  iterator(_vector + dst);
     };
 
     void insert (iterator position, size_type n, const value_type& val)
     {
-        // for (size_type i =0; i < n; i++)
-        // {
-        //     // position = insert(position, val);
-        // }
+        for (size_type i =0; i < n; i++)
+        {
+            position = insert(position, val);
+        }
     };
+    template <class InputIterator>
+    void insert (iterator position, InputIterator first, InputIterator last, typename std::enable_if<!std::is_integral<InputIterator>::value>::type* = 0)
+    {
+        while(first != last)
+        {
+            position = insert(position, *first);
+            first++;
+        }
+    };
+    iterator erase (iterator position)
+    {
+        size_type dst = position - begin();
+        if (dst >= UINT_MAX)
+            throw std::length_error("");
+        if(dst>_size)
+            return NULL;
+        _size--;
+        for(size_type i = dst; i<_size; i++)
+        {
+            _alloc.destroy(&_vector[i]);
+            _alloc.construct(&_vector[i], _vector[i+1]);
+        }
+        return iterator(_vector + dst);
+    };
+    iterator erase (iterator first, iterator last)
+    {
+        iterator position;
+        size_type dst = last - first;
+        while(dst>0)
+        {
+            first++;
+            position = erase(--first);
+            dst--;
+        }
+        return iterator(position);
+    };
+    void swap (vector& x)
+    {
+        size_type       tmp_size = x._size;
+        allocator_type  tmp_alloc = x._alloc;
+        pointer         tmp_vector = x._vector;
+        size_type       tmp_capacity = x._capacity;
+        x._size = _size;
+        x._alloc = _alloc;
+        x._vector = _vector;
+        x._capacity = _capacity;
 
+        _size = tmp_size;
+        _alloc = tmp_alloc;
+        _vector = tmp_vector;
+        _capacity = tmp_capacity;
+    };
+    void clear()
+    {
+        size_type i = 0;
+        while(!empty())
+            pop_back();
+    };
+    // ------------------------Allocator------------------------ //
+    allocator_type get_allocator() const
+    {
+        return _alloc;
+    };
     // ------------------------Private------------------------ //
         private:
             size_type       _size;
             allocator_type  _alloc;
             pointer         _vector;
             size_type       _capacity;
+};
+template <class InputIterator1, class InputIterator2>
+  bool equal ( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2 )
+{
+  while (first1!=last1) {
+    if (!(*first1 == *first2))
+      return false;
+    ++first1; ++first2;
+  }
+  return true;
+}
+template <class T, class Alloc>
+bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+    return((lhs.size() == rhs.size()) && equal(lhs.begin(), lhs.end(), rhs.begin()));
+};
+template <class T, class Alloc>
+bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+
+};
+template <class T, class Alloc>
+bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+
+};
+template <class T, class Alloc>
+bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+
+};
+template <class T, class Alloc>
+bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+
+};
+template <class T, class Alloc>
+bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+    
 };
