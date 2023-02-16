@@ -29,19 +29,33 @@
 // iterators in vector
 #include <iostream>
 #include <vector>
+#include <type_traits>
 
 using namespace std;
 
+template <typename T>
+typename std::enable_if<std::is_integral<T>::value, void>::type
+foo(T x) {
+	cout<<"here int";
+}
+
+template <typename T>
+typename std::enable_if<!std::is_integral<T>::value, void>::type
+foo(T x) {
+	cout<<"here not int";
+  // This function will only be available for non-integral types
+}
 int main()
 {
-	std::vector<int> g1;
+	foo(7);
+	// std::vector<int> g1;
 
-	for (int i = 1; i <= 5; i++)
-		g1.push_back(i);
+	// for (int i = 1; i <= 5; i++)
+	// 	g1.push_back(i);
 
-	cout << "Output of begin and end: ";
-	for (vector<int>::iterator i = g1.begin(); i != g1.end(); ++i)
-		cout << *i << " ";
+	// cout << "Output of begin and end: ";
+	// for (vector<int>::iterator i = g1.begin(); i != g1.end(); ++i)
+	// 	cout << *i << " ";
     
 	// cout << "\nOutput of cbegin and cend: ";
 	// for (vector<int>::iterator i = g1.cbegin(); i != g1.cend(); ++i)

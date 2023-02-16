@@ -45,7 +45,8 @@ class vector
 
         // ------------------------ range constructor ------------------------ //
         template <typename InputIterator>
-        vector (InputIterator first, InputIterator last,                 const allocator_type& alloc = allocator_type(), typename std::enable_if<!std::is_integral<InputIterator>::value>::type* = 0)
+        typename std::enable_if<!std::is_integral<T>::value, void>::type
+        vector (InputIterator first, InputIterator last,                 const allocator_type& alloc = allocator_type())
         {
             this->_alloc = alloc;
             this->_size = last - first;
