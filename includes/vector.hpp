@@ -17,8 +17,8 @@ class vector
         // typedef const value_type*                        const_pointer;
         typedef MyRandomAccessIterator<value_type>          iterator;
         typedef MyRandomAccessIterator<const value_type>    const_iterator;
-        typedef my_rev_it<value_type>                       reverse_iterator;
-        typedef my_rev_it<const value_type>                 const_reverse_iterator;
+        typedef my_rev_it<iterator>                       reverse_iterator;
+        typedef my_rev_it<const iterator>                 const_reverse_iterator;
         // typedef ptrdiff_t                                difference_type;
         typedef size_t                                      size_type;
 
