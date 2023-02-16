@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include<iostream>
 #include<climits>
+#include<utils/equal.hpp>
+#include<utils/lexicographical_compare.hpp>
 
 template < class T, class Alloc = std::allocator<T> > 
 class vector
@@ -387,16 +389,7 @@ class vector
             pointer         _vector;
             size_type       _capacity;
 };
-template <class InputIterator1, class InputIterator2>
-  bool equal ( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2 )
-{
-  while (first1!=last1) {
-    if (!(*first1 == *first2))
-      return false;
-    ++first1; ++first2;
-  }
-  return true;
-}
+
 template <class T, class Alloc>
 bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
@@ -405,12 +398,12 @@ bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 template <class T, class Alloc>
 bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
-
+    return(!(lhs == rhs));
 };
 template <class T, class Alloc>
 bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
-
+    return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin());
 };
 template <class T, class Alloc>
 bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
