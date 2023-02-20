@@ -3,13 +3,19 @@
 int main()
 {
     avlTree<int> tr;
+    tr._tr = tr.insert(tr._tr, 52);
+    tr._tr = tr.insert(tr._tr, 60);
+    tr._tr = tr.insert(tr._tr, 35);
+    tr._tr = tr.insert(tr._tr, 30);
+    tr._tr = tr.insert(tr._tr, 55);
+    tr._tr = tr.insert(tr._tr, 29);
     tr._tr = tr.insert(tr._tr, 20);
-    tr._tr = tr.insert(tr._tr, 11);
-    tr._tr = tr.insert(tr._tr, 10);
-    tr._tr = tr.insert(tr._tr, 15);
-    tr._tr = tr.insert(tr._tr, 13);
-    tr._tr = tr.insert(tr._tr, 16);
-    tr._tr = tr.insert(tr._tr, 25);
-    tr._tr = tr.insert(tr._tr, 28);
+    // tr._tr = tr.insert(tr._tr, 32);
+    // tr._tr = tr.insert(tr._tr, 37);
+    // tr._tr = tr.insert(tr._tr, 29);
+    // tr._tr = tr.insert(tr._tr, 55);
+    // tr._tr = tr.insert(tr._tr, 52);
+    // tr._tr = tr.insert(tr._tr, 23);
+    tr._tr = tr.delete_node(tr._tr, 55);
     tr.left_right_root(tr._tr);
 }

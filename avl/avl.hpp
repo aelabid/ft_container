@@ -109,7 +109,10 @@ class avlTree
             if(tree->left)
             {
                 if (balance < -1 && val < tree->left->val)
+                {
+                    // std::cout<<"here";
                     tree = right_rotation(tree);
+                }
                 if (balance < -1 && val > tree->left->val)
                 {
                     tree->left = left_rotation(tree->left);
@@ -137,44 +140,64 @@ class avlTree
             else
                 tree->left = insert(tree->left, val);
             int balance = calcule_balance_for_one_node(tree);
-            // if(tree->left)
-            // {
-            //     if (balance < -1 && val < tree->left->val)
-            //         tree = right_rotation(tree);
-            //     if (balance < -1 && val > tree->left->val)
-            //     {
-            //         tree->left = left_rotation(tree->left);
-            //         return right_rotation(tree);
-            //     }
-            // }
-            // if(tree->right)
-            // {
-            //     if(balance > 1 && val > tree->right->val)
-            //         return left_rotation(tree);
-            //     if (balance > 1 && val < tree->right->val)
-            //     {
-            //         tree->right = right_rotation(tree->right);
-            //         return left_rotation(tree);
-            //     }
-            // }
             tree = ft_balance(tree, balance, val);
             return tree;
         };
+        T   min_value(_t_tree *tree)
+        {
+            T val = tree->val;
+            while(tree)
+            {
+                val = tree->val;
+                tree = tree->left;
+            }
+            return val;
+        }
         _t_tree *delete_node(_t_tree *tree, T val)
         {
             if (!tree)
                 return (tree);
             else if (val < tree->val)
                 tree->left = delete_node(tree->left, val);
-            else if (val > tree->right)
+            else if (val > tree->val)
                 tree->right = delete_node(tree->right, val);
-            else
+            else 
             {
-                if (tree->left == NULL)
+                if (!tree->left || !tree->right)
                 {
-                    _t_tree *tmp = tree->left;
+                    _t_tree *r, *l;
+                    r = tree->right;
+                    l = tree->left;   
+                    _alloc.destroy(tree);
+                    _alloc.deallocate(tree, 1);
+                    if (l == NULL)
+                        return (r);
+                    else if (r == NULL)
+                        return (l);
+                }
+                else
+                {
+                    T tmp_val = min_value(tree->right);
+                    tree->val = tmp_val;
+                    tree->right = delete_node(tree->right, tmp_val);
                 }
             }
+            int balance = calcule_balance_for_one_node(tree);
+            if(balance == 2 && calcule_balance_for_one_node(tree->left) == -1)
+                return left_rotation(tree);
+            else if (balance == 2 && calcule_balance_for_one_node(tree->left) == -1)
+            {
+                tree->left = right_rotation(tree->left);
+                return left_rotation(tree);
+            }
+            else if (balance == -2 && calcule_balance_for_one_node(tree->right) <= 0)
+                return right_rotation(tree);
+            else if (balance == -2 && calcule_balance_for_one_node(tree->right) == 1)
+            {
+                tree->right = left_rotation(tree->right);
+                return right_rotation(tree);
+            }
+            return(tree);
         }
         _t_tree *_tr;
     private:
