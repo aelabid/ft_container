@@ -8,7 +8,7 @@
 #include"../utils/enable_if.hpp"
 #include"../utils/lexicographical_compare.hpp"
 
-template < class T, class Alloc = std::allocator<T> > 
+template < typename T, class Alloc = std::allocator<T> > 
 class vector
 {
     public:
