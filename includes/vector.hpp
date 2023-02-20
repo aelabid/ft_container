@@ -3,8 +3,10 @@
 #include <stdexcept>
 #include<iostream>
 #include<climits>
-#include<utils/equal.hpp>
-#include<utils/lexicographical_compare.hpp>
+#include"../utils/equal.hpp"
+#include"../utils/is_integral.hpp"
+#include"../utils/enable_if.hpp"
+#include"../utils/lexicographical_compare.hpp"
 
 template < class T, class Alloc = std::allocator<T> > 
 class vector
@@ -46,9 +48,9 @@ class vector
         }
 
         // ------------------------ range constructor ------------------------ //
-        template <typename InputIterator>
-        typename std::enable_if<!std::is_integral<T>::value, void>::type
-        vector (InputIterator first, InputIterator last,                 const allocator_type& alloc = allocator_type())
+        template <typename InputIterator,
+        typename enable_if<!is_integral<InputIterator>::value, void>::type>
+        vector (InputIterator first, InputIterator last,            const allocator_type& alloc = allocator_type())
         {
             this->_alloc = alloc;
             this->_size = last - first;
@@ -192,7 +194,7 @@ class vector
             _capacity = (_size == 0) ? 1 : (_size - 1) * 2;
         }
     }
-    // ------------------------Element access------------------------ //
+    // ------------------------ Element access ------------------------ //
         reference operator[](size_type n) 
         { 
             return this->_vector[n]; 
@@ -420,3 +422,5 @@ bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
     
 };
+
+// understand lexicographical_compare

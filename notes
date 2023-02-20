@@ -1,3 +1,5 @@
 1 - pair
 2 - make pair
 3 - implement delete for the avl
+4 - test lexicographical_compare2
+5 - operator n + iterator

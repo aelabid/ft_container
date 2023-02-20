@@ -64,7 +64,7 @@ public:
     }
     MyRandomAccessIterator operator+(difference_type a) const
     {
-        return MyRandomAccessIterator(_it + a);
+        return _it + a;
     }
     MyRandomAccessIterator operator-(difference_type a) const
     {
@@ -232,3 +232,5 @@ typename my_rev_it<Iterator>::difference_type operator- (    const my_rev_it<Ite
 {
     return rhs - lhs;
 };
+
+//operator n + it
