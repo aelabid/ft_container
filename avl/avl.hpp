@@ -2,16 +2,20 @@
 
 #include<iostream>
 template<class T>
+struct 	_t_tree
+{
+    T   val;
+    struct s_tree *right;
+    struct s_tree *left;
+    int balance;
+};
+
+template<class T, class Alloc = std::allocator<_t_tree<T>>>
 class avlTree
 {
     public:
-    typedef struct s_tree
-    {
-        T   val;
-        struct s_tree *right;
-        struct s_tree *left;
-        int balance;
-    }	_t_tree;
+    typedef Alloc   allocator;
+    
     avlTree(){
         _tr = NULL;
     };
