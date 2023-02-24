@@ -1,21 +1,23 @@
 #pragma once
 
 #include<iostream>
-template<class T>
+template<class T, class V>
 struct 	_t_tree
 {
-    T   val;
-    struct s_tree *right;
-    struct s_tree *left;
+    T   key;
+    V   val;
+    struct _t_tree *right;
+    struct _t_tree *left;
     int balance;
 };
 
-template<class T, class Alloc = std::allocator<_t_tree<T>>>
+template<class T, class V, class Alloc = std::allocator<_t_tree<T, V> > >
 class avlTree
 {
     public:
     typedef Alloc   allocator;
-    
+    // typedef T       key;
+    // typedef V       value;
     avlTree(){
         _tr = NULL;
     };
@@ -28,22 +30,22 @@ class avlTree
         return *this;
     }
     ~avlTree(){};
-        _t_tree    *new_node(T val)
+        _t_tree<T, V>     *new_node(T key, V val)
         {
-            _t_tree *my_new_node = _alloc.allocate(1);
-            _alloc.construct(my_new_node, (_t_tree){val, NULL, NULL, 0});
+            _t_tree<T, V>  *my_new_node = _alloc.allocate(1);
+            _alloc.construct(my_new_node, (_t_tree<T, V> ){key, val, NULL, NULL, 0});
             return my_new_node;
         }
 
-        void    left_root_right(_t_tree *tree)
+        void    left_root_right(_t_tree<T, V>  *tree)
         {
             if(!tree)
                 return;
             left_root_right(tree->left);
-            std::cout<<tree->val<<std::endl;
+            std::cout<<tree->key<<std::endl;
             left_root_right(tree->right);
         }
-        int    calcule_height_one_node(_t_tree *tree)
+        int    calcule_height_one_node(_t_tree<T, V>  *tree)
         {
             int leftB;
             int rightB;
@@ -60,7 +62,7 @@ class avlTree
             }
         }
         
-        int calcule_balance_for_one_node(_t_tree *tree)
+        int calcule_balance_for_one_node(_t_tree<T, V>  *tree)
         {
             if(!tree)
                 return(0);
@@ -71,7 +73,7 @@ class avlTree
             return(rightH - leftH);
         }
 
-        void    calcule_balance_for_all_nodes(_t_tree *tree)
+        void    calcule_balance_for_all_nodes(_t_tree<T, V>  *tree)
         {
             if(!tree)
                 return ;
@@ -80,44 +82,44 @@ class avlTree
             calcule_balance_for_all_nodes(tree->right);
         }
 
-        _t_tree *right_rotation(_t_tree *tree)
+        _t_tree<T, V>  *right_rotation(_t_tree<T, V>  *tree)
         {
             if(!tree->left)
                 return tree;
-            _t_tree *tmp;
+            _t_tree<T, V>  *tmp;
             tmp = tree->left;
             tree->left = tmp->right;
             tmp->right = tree;
             return (tmp);
         }
-        _t_tree *left_rotation(_t_tree *tree)
+        _t_tree<T, V>  *left_rotation(_t_tree<T, V>  *tree)
         {
-            if(!tree->right)
+            if (!tree->right)
                 return tree;
-            _t_tree *tmp;
+            _t_tree<T, V>  *tmp;
             tmp = tree->right;
             tree->right = tmp->left;
             tmp->left = tree;
             return (tmp);
         }
-        void    left_right_root(_t_tree *tree)
+        void    left_right_root(_t_tree<T, V>  *tree)
         {
             if(!tree)
                 return;
             left_right_root(tree->left);
             left_right_root(tree->right);
-            std::cout<<tree->val<<std::endl;
+            std::cout<<tree->key<< " " << tree->val<<std::endl;
         }
-        _t_tree    *ft_balance(_t_tree *tree, int balance, T val)
+        _t_tree<T, V>     *ft_balance(_t_tree<T, V>  *tree, int balance, T key)
         {
             if(tree->left)
             {
-                if (balance < -1 && val < tree->left->val)
+                if (balance < -1 && key < tree->left->key)
                 {
                     // std::cout<<"here";
                     tree = right_rotation(tree);
                 }
-                if (balance < -1 && val > tree->left->val)
+                if (balance < -1 && key > tree->left->key)
                 {
                     tree->left = left_rotation(tree->left);
                     return right_rotation(tree);
@@ -125,9 +127,9 @@ class avlTree
             }
             if(tree->right)
             {
-                if(balance > 1 && val > tree->right->val)
+                if(balance > 1 && key > tree->right->key)
                     return left_rotation(tree);
-                if (balance > 1 && val < tree->right->val)
+                if (balance > 1 && key < tree->right->key)
                 {
                     tree->right = right_rotation(tree->right);
                     return left_rotation(tree);
@@ -135,41 +137,41 @@ class avlTree
             }
             return (tree);
         }
-        _t_tree *insert(_t_tree *tree, T val)
+        _t_tree<T, V>  *insert(_t_tree<T, V>  *tree, T key, V val)
         {
             if (!tree)
-                tree = new_node(val);
-            else if(val > tree->val)
-                tree->right = insert(tree->right, val);
+                tree = new_node(key, val);
+            else if(key > tree->key)
+                tree->right = insert(tree->right, key, val);
             else
-                tree->left = insert(tree->left, val);
+                tree->left = insert(tree->left, key, val);
             int balance = calcule_balance_for_one_node(tree);
-            tree = ft_balance(tree, balance, val);
+            tree = ft_balance(tree, balance, key);
             return tree;
         };
-        T   min_value(_t_tree *tree)
+        T   min_value(_t_tree<T, V>  *tree)
         {
-            T val = tree->val;
+            T key = tree->key;
             while(tree)
             {
-                val = tree->val;
+                key = tree->key;
                 tree = tree->left;
             }
-            return val;
+            return key;
         }
-        _t_tree *delete_node(_t_tree *tree, T val)
+        _t_tree<T, V>  *delete_node(_t_tree<T, V>  *tree, T key)
         {
             if (!tree)
                 return (tree);
-            else if (val < tree->val)
-                tree->left = delete_node(tree->left, val);
-            else if (val > tree->val)
-                tree->right = delete_node(tree->right, val);
+            else if (key < tree->key)
+                tree->left = delete_node(tree->left, key);
+            else if (key > tree->key)
+                tree->right = delete_node(tree->right, key);
             else 
             {
                 if (!tree->left || !tree->right)
                 {
-                    _t_tree *r, *l;
+                    _t_tree<T, V>  *r, *l;
                     r = tree->right;
                     l = tree->left;   
                     _alloc.destroy(tree);
@@ -182,7 +184,7 @@ class avlTree
                 else
                 {
                     T tmp_val = min_value(tree->right);
-                    tree->val = tmp_val;
+                    tree->key = tmp_val;
                     tree->right = delete_node(tree->right, tmp_val);
                 }
             }
@@ -203,7 +205,15 @@ class avlTree
             }
             return(tree);
         }
-        _t_tree *_tr;
+        _t_tree get_next(_t_tree<T, V> *tree)
+        {
+            if(tree->right == NULL)
+                return tree;
+            else
+                return tree->right;
+        }
+         
+        _t_tree<T, V>  *_tr;
     private:
-        std::allocator<_t_tree> _alloc;
+        std::allocator<_t_tree<T, V> > _alloc;
 };
