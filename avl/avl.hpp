@@ -180,9 +180,7 @@ class avlTree
             key_val = make_pair(tree->key, tree->val);
             while(tree)
             {
-                key_val = make_pair(tree->key, tree->val);
-                // key = tree->key; 
-                // val = tree->val; 
+                key_val = make_pair(tree->key, tree->val); 
                 tree = tree->left;
             }
             return key_val;

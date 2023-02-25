@@ -10,21 +10,6 @@ template < class Key,  class T,
   class Alloc = std::allocator<pair<const Key,T> > > 
 class map
 {
-  private:
-    class Comp_val
-    {
-      protected:
-          Compare comp;
-      public:
-        Comp_val()
-        {
-          comp = Compare();
-        }
-        bool operator()(const pair<const Key, T> &lhs, const pair<const Key, T> &rhs) const {
-            return comp(lhs.first, rhs.first);
-        }
-    };
-
   public:
     typedef Key                                       key_type;
     typedef T                                         mapped_type;
@@ -32,7 +17,7 @@ class map
     typedef size_t                                    size_type;
     typedef std::ptrdiff_t                            difference_type;
     typedef Compare                                   key_compare;
-    typedef Comp_val                                  value_compare;
+    // typedef Comp_val                                  value_compare;
     typedef Alloc                                     allocator_type;
     typedef typename Alloc::reference                 reference;
     typedef typename Alloc::const_reference           const_reference;
@@ -42,15 +27,50 @@ class map
     // typedef MyBidirectionalIterator<const value_type> const_iterator;
     // typedef my_rev_it<iterator>                     const_iterator;
     // typedef my_rev_it<const_iterator>                     const_iterator;
-
-    private:
-      avlTree<value_type> _tree;
+    class value_compare : public std::binary_function<value_type, value_type, bool> 
+    {
+      public:
+          bool operator()(const value_type& x, const value_type& y) const
+          {
+            return (comp(x.first, y.first));
+          }
+      protected:
+          value_compare(key_compare pr) : comp(pr) {}
+          key_compare comp;
+    };
     public:
       explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
       {
-
+        _alloc = alloc;
+        _tree = NULL;
       };
+      // template <class InputIterator>
+      // map (InputIterator first, InputIterator last,
+      //   const key_compare& comp = key_compare(),
+      //     const allocator_type& alloc = allocator_type())
+      // {
+        
+      // };
+    // map (const map& x)
+    // {
 
+    // };
+    //  map& operator= (const map& x)
+    //  {
+
+    //  };
+    // iterator begin()
+    // {
+
+    // };
+    // const_iterator begin() const
+    // {
+
+    // };
+
+    private:
+      avlTree<key_type, mapped_type, Alloc> _tree;
+      allocator_type  _alloc;
 };
 
 // value compare not yet

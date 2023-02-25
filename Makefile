@@ -6,7 +6,7 @@
 #    By: aelabid <aelabid@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/16 07:22:21 by aelabid           #+#    #+#              #
-#    Updated: 2023/02/20 07:09:55 by aelabid          ###   ########.fr        #
+#    Updated: 2023/02/24 20:17:49 by aelabid          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,11 +22,11 @@ CC = c++
 all : $(NAME)
 
 
-%.o: %.c 
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.cpp
+	$(CC) -c $<  -o $@ 
 	
 $(NAME) : $(OBJ)
-	$(CC) $(OBJ) -o $(NAME)
+	$(CC) -fsanitize=address $(OBJ) -o $(NAME)
 
 
 clean :
