@@ -6,7 +6,7 @@ class comp
     public:
     bool operator()(T a, T b)
     {
-        return (a>b);
+        return (a<b);
     }
 };
 
@@ -14,15 +14,23 @@ int main()
 {
     // std::vector<int> v(1, 10);
     avlTree<int, int, comp<int> > tr;
-    tr._tr = tr.insert(tr._tr, 2, 20);
-    tr._tr = tr.insert(tr._tr, 4, 6);
-    tr._tr = tr.insert(tr._tr, 3, 30);
-    // tr._tr = tr.insert(tr._tr, 23, 30);
-    // tr._tr = tr.insert(tr._tr, 66, 30);
-    // tr._tr = tr.insert(tr._tr, 232, 30);
-    // tr._tr = tr.insert(tr._tr, 1, 60);
-    // tr._tr = tr.insert(tr._tr, 32, 30);
-    // tr._tr = tr.insert(tr._tr, 2, 50);
+    tr._tr = tr.insert(tr._tr, 50, 20);
+    tr._tr = tr.insert(tr._tr, 35, 6);
+    tr._tr = tr.insert(tr._tr, 60, 30);
+    tr._tr = tr.insert(tr._tr, 30, 30);
+    tr._tr = tr.insert(tr._tr, 40, 30);
+    tr._tr = tr.insert(tr._tr, 55, 30);
+    tr._tr = tr.insert(tr._tr, 70, 60);
+    tr._tr = tr.insert(tr._tr, 29, 4);
+    tr._tr = tr.insert(tr._tr, 32, 50);
+    tr._tr = tr.insert(tr._tr,37, 50);
+    tr._tr = tr.insert(tr._tr,52, 50);
+    tr._tr = tr.insert(tr._tr,65, 50);
+    tr._tr = tr.insert(tr._tr,75, 50);
+    tr._tr = tr.insert(tr._tr,23, 50);
+    tr._tr = tr.insert(tr._tr,62, 50);
+    tr._tr = tr.insert(tr._tr,57, 50);
+    tr._tr = tr.insert(tr._tr,42, 50);
     
     // tr._tr = tr.insert(tr._tr, 'd', 40);
     // tr._tr = tr.insert(tr._tr, 'a', 40);
@@ -39,6 +47,6 @@ int main()
     // tr._tr = tr.delete_node(tr._tr, 2);
     // tr._tr = tr.get_prev(tr._tr, 2);
     // tr.clear(tr._tr);
-    tr.left_right_root(tr._tr);
-    // std::cout<<tr.get_begin(tr._tr)->key;
+    tr.left_root_right(tr._tr);
+    // std::cout<<tr.get_prev_key(tr._tr, 62);
 }

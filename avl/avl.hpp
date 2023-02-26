@@ -154,10 +154,7 @@ class avlTree
         {
             T   tmp = find(tree, key);
             if(tmp)
-            {
-                // std::cout<< "here" << key << " " << val<<std::endl;
                 tree = delete_node(tree, tmp);
-            } 
             tree = insert_utile(tree, key, val);
             return tree;
         }
@@ -185,6 +182,7 @@ class avlTree
             }
             return key_val;
         }
+
         _t_tree<T, V>  *delete_node(_t_tree<T, V>  *tree, T key)
         {
             if (!tree)
@@ -232,13 +230,6 @@ class avlTree
             }
             return(tree);
         }
-        _t_tree<T, V>   get_next(_t_tree<T, V> *tree)
-        {
-            if(!tree)
-                return NULL;
-            else
-                return tree->right;
-        }
 
         _t_tree<T, V>   *get_prev(_t_tree<T, V> *tree, T key)
         {
@@ -264,6 +255,19 @@ class avlTree
                 tree = tree->left;
             return(tree);
         }
+        _t_tree<T, V>   *get_end(_t_tree<T, V> *tree)
+        {
+            while(tree->right)
+                tree = tree->right;
+            return(tree);
+        }
+        _t_tree<T, V>   *get_next(_t_tree<T, V> *tree)
+        {
+            if(!tree)
+                return NULL;
+            else if (tree->right)
+                return get_begin(tree->right);
+        }
         int get_size(_t_tree<T, V> *tree)
         {
             if (tree == NULL)
@@ -280,6 +284,64 @@ class avlTree
             _alloc.destroy(tree);
             _alloc.deallocate(tree, 1);
         }
+        T   get_prev_key(_t_tree<T, V> *tree, T key)
+        {
+            _t_tree<T, V> *tmp = tree;
+            T   val_prev;
+            if (key == tmp->key || _cmp(key, tmp->key))
+            {
+                while (tree)
+                {
+                    // tmp = tree->right;
+                    while (tmp && _cmp(key, tmp->key))
+                    {
+                        if (get_begin(tmp->right)->key == key)
+                            return tmp->key;
+                        tmp = tmp->left;
+                    }
+                    if(tmp && tmp->key == key)
+                    {
+                        if (tmp->left)
+                            return get_end(tmp->left)->key;
+                        else
+                            return val_prev;
+                    }
+                    val_prev = tmp->key;
+                    while (tmp &&  _cmp(tmp->key, key))
+                    {
+                        if(tmp->right && !tmp->right->left && tmp->right->key == key)
+                            return tmp->key;
+                        tmp = tmp->right;
+                    }
+                }
+            }
+            if (_cmp(tmp->key, key))
+            {
+                while (tree)
+                {
+                    val_prev = tmp->key;
+                    while (tmp && _cmp(tmp->key, key))
+                    {
+                        if (get_begin(tmp->right)->key == key)
+                            return tmp->key;
+                        tmp = tmp->right;
+                    }
+                    while (tmp && _cmp(key, tmp->key))
+                    {
+                        
+                        tmp = tmp->left;
+                    }
+                    if (tmp && tmp->key == key)
+                    {
+                        if(tmp->left)
+                            return get_end(tmp->left)->key;
+                        else
+                            return val_prev;
+                    }
+                }
+            }
+            return (T)NULL;
+        };
         _t_tree<T, V>  *_tr;
     private:
         std::allocator<_t_tree<T, V> > _alloc;
