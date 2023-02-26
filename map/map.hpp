@@ -69,7 +69,7 @@ class map
     // };
 
     private:
-      avlTree<key_type, mapped_type, Alloc> _tree;
+      avlTree<key_type, mapped_type, key_compare, Alloc> _tree;
       allocator_type  _alloc;
 };
 

@@ -251,12 +251,16 @@ class avlTree
         }
         _t_tree<T, V>   *get_begin(_t_tree<T, V> *tree)
         {
+            if(!tree)
+                return NULL;
             while(tree->left)
                 tree = tree->left;
             return(tree);
         }
         _t_tree<T, V>   *get_end(_t_tree<T, V> *tree)
         {
+            if (!tree)
+                return NULL;
             while(tree->right)
                 tree = tree->right;
             return(tree);
@@ -286,59 +290,19 @@ class avlTree
         }
         T   get_prev_key(_t_tree<T, V> *tree, T key)
         {
-            _t_tree<T, V> *tmp = tree;
-            T   val_prev;
-            if (key == tmp->key || _cmp(key, tmp->key))
+            if(tree->key == key)
+                    return(get_end(tree->left)->key);
+            if (_cmp(key, tree->key))
             {
-                while (tree)
-                {
-                    // tmp = tree->right;
-                    while (tmp && _cmp(key, tmp->key))
-                    {
-                        if (get_begin(tmp->right)->key == key)
-                            return tmp->key;
-                        tmp = tmp->left;
-                    }
-                    if(tmp && tmp->key == key)
-                    {
-                        if (tmp->left)
-                            return get_end(tmp->left)->key;
-                        else
-                            return val_prev;
-                    }
-                    val_prev = tmp->key;
-                    while (tmp &&  _cmp(tmp->key, key))
-                    {
-                        if(tmp->right && !tmp->right->left && tmp->right->key == key)
-                            return tmp->key;
-                        tmp = tmp->right;
-                    }
-                }
+                if(tree->right && get_begin(tree->right)->key == key)
+                    return tree->key;
+                return (get_prev_key(tree->left, key));
             }
-            if (_cmp(tmp->key, key))
+            else if (_cmp(tree->key, key))
             {
-                while (tree)
-                {
-                    val_prev = tmp->key;
-                    while (tmp && _cmp(tmp->key, key))
-                    {
-                        if (get_begin(tmp->right)->key == key)
-                            return tmp->key;
-                        tmp = tmp->right;
-                    }
-                    while (tmp && _cmp(key, tmp->key))
-                    {
-                        
-                        tmp = tmp->left;
-                    }
-                    if (tmp && tmp->key == key)
-                    {
-                        if(tmp->left)
-                            return get_end(tmp->left)->key;
-                        else
-                            return val_prev;
-                    }
-                }
+                if(tree->right && get_begin(tree->right)->key == key)
+                    return tree->key;
+            return get_prev_key(tree->right, key);
             }
             return (T)NULL;
         };

@@ -16,7 +16,7 @@ int main()
   // Get an iterator pointing to the first element in the map
   std::map<int, int>::iterator it = map.begin();
   it++;
-  it++;
+  it--;
   // Iterate through the map and print the elements
   while (it != map.end())
   {

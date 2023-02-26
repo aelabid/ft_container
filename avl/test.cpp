@@ -47,6 +47,6 @@ int main()
     // tr._tr = tr.delete_node(tr._tr, 2);
     // tr._tr = tr.get_prev(tr._tr, 2);
     // tr.clear(tr._tr);
-    tr.left_root_right(tr._tr);
-    // std::cout<<tr.get_prev_key(tr._tr, 62);
+    // tr.left_root_right(tr._tr);
+    std::cout<<tr.get_prev_key(tr._tr, 50);
 }
