@@ -27,6 +27,7 @@ template <class Iter>
 template <class T>
     class iterator_traits<T*>
     {
+        public:
         typedef T                               value_type;
         typedef ptrdiff_t                       difference_type;
         typedef T*                              pointer;
@@ -38,6 +39,7 @@ template <class T>
 template <class T>
     class iterator_traits<const T*>
     {
+        public:
         typedef T                               value_type;
         typedef ptrdiff_t                       difference_type;
         typedef const T*                        pointer;

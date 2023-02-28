@@ -6,11 +6,11 @@ template<typename T>
 class MyRandomAccessIterator
 {
 public:
-    typedef iterator_traits<T*>::value_type                      value_type;
-    typedef iterator_traits<T*>::difference_type                 difference_type;
-    typedef iterator_traits<T*>::pointer                         pointer;
-    typedef iterator_traits<T*>::reference                       reference;
-    typedef iterator_traits<T*>::iterator_category               iterator_category;
+    typedef typename iterator_traits<T*>::value_type                      value_type;
+    typedef typename iterator_traits<T*>::difference_type                 difference_type;
+    typedef typename iterator_traits<T*>::pointer                         pointer;
+    typedef typename iterator_traits<T*>::reference                       reference;
+    typedef typename iterator_traits<T*>::iterator_category               iterator_category;
 
     // X b(a);
     MyRandomAccessIterator(){this->_it = NULL;};

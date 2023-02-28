@@ -6,7 +6,9 @@
 template<class T, class V>
 struct 	_t_tree
 {
-    ft::pair<T, V> node;
+    // T   key;
+    // V   val;
+    pair<T, V> node;
     struct _t_tree *parent;
     struct _t_tree *right;
     struct _t_tree *left;
@@ -18,8 +20,6 @@ class avlTree
 {
     public:
     typedef Alloc   allocator;
-    typedef T value_type;
-
     // typedef T       key;
     // typedef V       value;
     avlTree(){
@@ -38,7 +38,7 @@ class avlTree
         _t_tree<T, V>     *new_node(T key, V val)
         {
             _t_tree<T, V>  *my_new_node = _alloc.allocate(1);
-            _alloc.construct(my_new_node, (_t_tree<T, V> ){ft::make_pair(key, val), NULL, NULL, 0});
+            _alloc.construct(my_new_node, (_t_tree<T, V> ){make_pair(key, val), NULL, NULL, 0});
             return my_new_node;
         }
 
@@ -47,9 +47,7 @@ class avlTree
             if(!tree)
                 return;
             left_root_right(tree->left);
-            std::cout<<tree->node.first<< " "<< tree->node.second<<std::endl;
-            // if(tree->parent)
-            //     std::cout<<"parent = "<< tree->parent->node.first<<std::endl;
+            std::cout<<tree->node.first<< " "<< tree->node.second << " parent = " << tree->parent->node.first<<std::endl;
             left_root_right(tree->right);
         }
         int    calcule_height_one_node(_t_tree<T, V>  *tree)
@@ -154,20 +152,23 @@ class avlTree
                 return (find(tree->right, key));
             return (T)NULL;
         }
-        void init_parent(_t_tree<T, V>* tree)
+        _t_tree<T, V>* init_parent(_t_tree<T, V>* tree, T key)
         {
-            if(!tree)
-                return;
-            init_parent(tree->left);
-            if(tree->left)
-                tree->left->parent = tree;
-            if(tree->right)
-                tree->right->parent = tree;
-            init_parent(tree->right);
+            if (_cmp(key, tree->node.first))
+            {
+                if(tree->left && tree->left->node.first == key)
+                    return tree;
+            }
+            else if(_cmp(tree->node.first , key))
+            {
+                if(tree->right && tree->right->node.first == key)
+                    return tree;
+            }
+            return NULL;
         }   
-        ft::pair<_t_tree<T, V>*, bool> insert(_t_tree<T, V>  *tree, T key, V val)
+        pair<_t_tree<T, V>*, bool> insert(_t_tree<T, V>  *tree, T key, V val)
         {
-            ft::pair<_t_tree<T, V>*, bool> ret; 
+            pair<_t_tree<T, V>*, bool> ret; 
             ret.second = 0;
             T   tmp = find(tree, key);
             if(tmp)
@@ -176,7 +177,13 @@ class avlTree
                 tree = delete_node(tree, tmp);
             }
             tree = insert_utile(tree, key, val);
-            init_parent(tree);
+            // if(_i == 0)
+            //     tree->parent = NULL;
+            // else
+            // {
+            //     tree->parent = init_parent(tree, key);
+            //     _i++;
+            // }
             ret.first = tree;
             return ret;
         }
@@ -189,17 +196,17 @@ class avlTree
                 tree->left = insert_utile(tree->left, key, val);
             else if(_cmp(tree->node.first, key))
                 tree->right = insert_utile(tree->right, key, val);
-            int balance = calcule_balance_for_one_node(tree);
-            tree = ft_balance(tree, balance, key);
+            // int balance = calcule_balance_for_one_node(tree);
+            // tree = ft_balance(tree, balance, key);
             return tree;
         };
-        ft::pair<T, V>   min_value(_t_tree<T, V>  *tree)
+        pair<T, V>   min_value(_t_tree<T, V>  *tree)
         {
-            ft::pair<T, V> key_val;
-            key_val = ft::make_pair(tree->node.first, tree->node.second);
+            pair<T, V> key_val;
+            key_val = make_pair(tree->node.first, tree->node.second);
             while(tree)
             {
-                key_val = ft::make_pair(tree->node.first, tree->node.second); 
+                key_val = make_pair(tree->node.first, tree->node.second); 
                 tree = tree->left;
             }
             return key_val;
@@ -229,7 +236,7 @@ class avlTree
                 }
                 else
                 {
-                    ft::pair<T, V> key_val = min_value(tree->right);
+                    pair<T, V> key_val = min_value(tree->right);
                     tree->node.first = key_val.first;
                     tree->node.second = key_val.second;
                     tree->right = delete_node(tree->right, key_val.first);
@@ -289,11 +296,11 @@ class avlTree
         }
         _t_tree<T, V>   *get_next(_t_tree<T, V> *tree)
         {
-            if (tree->right)
+            if(!tree)
+                return NULL;
+            else if (tree->right)
                 return get_begin(tree->right);
-            else if(tree->left && tree->left->node.first == tree->node.first && !(tree->left->right))
-                return tree;
-            return(NULL);
+            // else if(get_end)
         }
         size_t get_size(_t_tree<T, V> *tree)
         {
@@ -311,32 +318,24 @@ class avlTree
             _alloc.destroy(tree);
             _alloc.deallocate(tree, 1);
         }
-        _t_tree<T, V>*   get_prev_key(_t_tree<T, V> *tree, T key)
+        T   get_prev_key(_t_tree<T, V> *tree, T key)
         {
             if(tree->node.first == key)
-                    return(get_end(tree->left));
+                    return(get_end(tree->left)->node.first);
             if (_cmp(key, tree->node.first))
             {
                 if(tree->right && get_begin(tree->right)->node.first == key)
-                    return tree;
+                    return tree->node.first;
                 return (get_prev_key(tree->left, key));
             }
             else if (_cmp(tree->node.first, key))
             {
                 if(tree->right && get_begin(tree->right)->node.first == key)
-                    return tree;
+                    return tree->node.first;
             return get_prev_key(tree->right, key);
             }
             return (T)NULL;
         };
-        _t_tree<T, V>* get_root(_t_tree<T, V> *tree)
-        {
-            while(tree->parent)
-            {
-                tree = tree->parent;
-            }
-            return tree;
-        }
         _t_tree<T, V>  *_tr;
     private:
         std::allocator<_t_tree<T, V> > _alloc;
