@@ -47,7 +47,7 @@ int main()
     // tr._tr = tr.get_prev(tr._tr, 2);
     // tr.clear(tr._tr);
     // tr.left_root_right(tr._tr);
-    tr._tr = tr.get_next(tr._tr);
-    std::cout<<tr.get_root(tr._tr)->node.first;
+    std::cout<<tr.get_next(tr._tr, 23)->node.first;
+    // std::cout<<tr.get_root(tr._tr)->node.first;
     // std::cout<<tr.get_next(tr._tr, 50);
 }

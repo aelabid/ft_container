@@ -24,8 +24,8 @@ class map
     typedef typename Alloc::const_reference           const_reference;
     typedef typename Alloc::pointer                   pointer;
     typedef typename Alloc::const_pointer             const_pointer;
-    typedef MyBidirectionalIterator<avlTree<key_type, mapped_type, key_compare, Alloc>, _t_tree<Key, T>*>       iterator;
-    // typedef MyBidirectionalIterator<const _t_tree<Key, T>* > const_iterator;
+    typedef MyBidirectionalIterator<avlTree<key_type, mapped_type, key_compare, Alloc>, _t_tree<Key, T>*, Key, T>       iterator;
+    typedef MyBidirectionalIterator<avlTree<key_type, mapped_type, key_compare, Alloc>, _t_tree<Key, T>*, Key, T>       const_iterator;
     // typedef my_rev_it<iterator>                     const_iterator;
     // typedef my_rev_it<const_iterator>                     const_iterator;
     class value_compare : public std::binary_function<value_type, value_type, bool> 
@@ -102,18 +102,18 @@ class map
     {
       return (iterator(_tree, _tree.get_begin(_tree._tr)));
     };
-    // const_iterator begin() const
-    // {
-    //   return (const_iterator(_tree.get_begin(_tree._tr)));
-    // };
-    // iterator end()
-    // {
-    //   return (iterator(_tree.get_end(_tree._tr)));
-    // };
-    // const_iterator end() const
-    // {
-    //   return (const_iterator(_tree.get_end(_tree._tr)));
-    // };
+    const_iterator begin() const
+    {
+      return (const_iterator(_tree, _tree.get_begin(_tree._tr)));
+    };
+    iterator end()
+    {
+      return (iterator(_tree, _tree.get_end(_tree._tr)));
+    };
+    const_iterator end() const
+    {
+      return (const_iterator(_tree, _tree.get_end(_tree._tr)));
+    };
 
     // ------------------------Modifiers------------------------ //
     ft::pair<iterator,bool> insert( const value_type& value )
