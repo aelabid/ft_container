@@ -23,13 +23,13 @@ int main()
   //   // std::cout << rit->first << " => " << rit->second << '\n';
   // ++rit;
   // ++rit;
-  while(rit != m.rend())
-  {
-    std::cout << rit->first << " => " << rit->second << '\n';
-    // std::cout<<"here";
-    ++rit;
-  }
+  // while(rit != m.rend())
+  // {
+  //   // std::cout << rit->first << " => " << rit->second << '\n';
+  //   ++rit;
+  // }
   for (rit=m.rbegin(); rit!=m.rend(); ++rit)
     std::cout << rit->first << " => " << rit->second << '\n';
+    // std::cout<<"here"<<std::endl;
 
 }

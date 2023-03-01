@@ -1,5 +1,6 @@
 #pragma once
 #include<iostream>
+namespace ft {
 
 template <class T>
 struct is_integral {
@@ -67,3 +68,4 @@ template <>
 struct is_integral<unsigned long long int> {
     static const bool value = true;
 };
+}

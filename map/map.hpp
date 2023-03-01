@@ -5,6 +5,7 @@
 #include"../iterators/vector_it.hpp"
 #include"../iterators/map_it.hpp"
 #include"../avl/avl.hpp"
+namespace ft {
 
 template < class Key,  class T, 
   class Compare = std::less<Key>,
@@ -24,10 +25,10 @@ class map
     typedef typename Alloc::const_reference           const_reference;
     typedef typename Alloc::pointer                   pointer;
     typedef typename Alloc::const_pointer             const_pointer;
-    typedef MyBidirectionalIterator<avlTree<key_type, mapped_type, key_compare, Alloc>, _t_tree<Key, T>*, Key, T>       iterator;
-    typedef MyBidirectionalIterator<avlTree<key_type, mapped_type, key_compare, Alloc>, _t_tree<Key, T>*, Key, T>       const_iterator;
-    // typedef my_rev_it<iterator>                     const_iterator;
-    // typedef my_rev_it<const_iterator>                     const_iterator;
+    typedef ft::MyBidirectionalIterator<avlTree<key_type, mapped_type, key_compare, Alloc>, _t_tree<Key, T>*, Key, T>       iterator;
+    typedef ft::MyBidirectionalIterator<const avlTree<key_type, mapped_type, key_compare, Alloc>, _t_tree<Key, T>*, Key, T>       const_iterator;
+    typedef ft::reverse_iterator_m<avlTree<key_type, mapped_type, key_compare, Alloc>, _t_tree<Key, T>*, Key, T>                     reverse_iterator;
+    typedef ft::reverse_iterator_m<const avlTree<key_type, mapped_type, key_compare, Alloc>, _t_tree<Key, T>*, Key, T>                     const_reverse_iterator;
     class value_compare : public std::binary_function<value_type, value_type, bool> 
     {
       public:
@@ -108,12 +109,29 @@ class map
     };
     iterator end()
     {
-      return (iterator(_tree, _tree.get_end(_tree._tr)));
+      return (iterator(_tree, _tree.get_end_key(_tree._tr)));
     };
     const_iterator end() const
     {
       return (const_iterator(_tree, _tree.get_end(_tree._tr)));
     };
+    reverse_iterator rbegin()
+    {
+      return (reverse_iterator(_tree, _tree.get_end_key(_tree._tr)));
+    };
+    const_reverse_iterator rbegin() const
+    {
+      return (const_reverse_iterator(_tree, _tree.get_end_key(_tree._tr)));
+    };
+    reverse_iterator rend()
+    {
+      return (reverse_iterator(_tree, _tree.get_begin_key(_tree._tr)));
+    };
+    const_reverse_iterator rend() const
+    {
+      return (const_reverse_iterator(_tree, _tree.get_begin_key(_tree._tr)));
+    };
+
 
     // ------------------------Modifiers------------------------ //
     ft::pair<iterator,bool> insert( const value_type& value )
@@ -134,5 +152,5 @@ class map
       avlTree<key_type, mapped_type, key_compare, Alloc> _tree;
       allocator_type  _alloc;
 };
-
+}
 // value compare not yet

@@ -1,6 +1,7 @@
 #pragma once
 
 #include"iterator_traits.hpp"
+namespace ft {
 
 template<typename T>
 class MyRandomAccessIterator
@@ -232,5 +233,5 @@ typename my_rev_it<Iterator>::difference_type operator- (    const my_rev_it<Ite
 {
     return rhs - lhs;
 };
-
+}
 //operator n + it

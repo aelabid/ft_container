@@ -7,6 +7,7 @@
 #include"../utils/is_integral.hpp"
 #include"../utils/enable_if.hpp"
 #include"../utils/lexicographical_compare.hpp"
+namespace ft {
 
 template < typename T, class Alloc = std::allocator<T> > 
 class vector
@@ -18,12 +19,12 @@ class vector
         typedef value_type&                                 reference;
         typedef const value_type&                           const_reference;
         typedef value_type*                                 pointer;
-        // typedef const value_type*                        const_pointer;
-        typedef MyRandomAccessIterator<value_type>          iterator;
-        typedef MyRandomAccessIterator<const value_type>    const_iterator;
-        typedef my_rev_it<iterator>                       reverse_iterator;
-        typedef my_rev_it<const iterator>                 const_reverse_iterator;
-        // typedef ptrdiff_t                                difference_type;
+        typedef const value_type*                        const_pointer;
+        typedef ft::MyRandomAccessIterator<value_type>          iterator;
+        typedef ft::MyRandomAccessIterator<const value_type>    const_iterator;
+        typedef ft::my_rev_it<iterator>                       reverse_iterator;
+        typedef ft::my_rev_it<const iterator>                 const_reverse_iterator;
+        typedef ptrdiff_t                                difference_type;
         typedef size_t                                      size_type;
 
     // -------------------------------Constructors-------------------------------------//
@@ -405,7 +406,7 @@ bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 template <class T, class Alloc>
 bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
-    return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin());
+    return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin());
 };
 template <class T, class Alloc>
 bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
@@ -424,3 +425,4 @@ bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 };
 
 // understand lexicographical_compare
+}

@@ -1,6 +1,8 @@
 #pragma once
 #include<cstddef>
 #include <iterator>
+namespace ft {
+
 template <class Category, class T, class Distance = ptrdiff_t,
           class Pointer = T*, class Reference = T&>
     struct iterator {
@@ -46,3 +48,4 @@ template <class T>
         typedef const T&                        reference;
         typedef std::random_access_iterator_tag iterator_category;
     };
+}

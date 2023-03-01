@@ -278,7 +278,7 @@ class avlTree
         {
             if(!tree)
                 return NULL;
-            while(tree->left && tree->right->k == 1)
+            while(tree->left)
             {
                 tree = tree->left;
             }
@@ -296,7 +296,7 @@ class avlTree
         {
             if (!tree)
                 return NULL;
-            while(tree->right)
+            while(tree->right && tree->right->k == 1)
                 tree = tree->right;
             return(tree);
         }
@@ -337,7 +337,7 @@ class avlTree
         _t_tree<T, V>*   get_prev_key(_t_tree<T, V> *tree, T key)
         {
             if(tree->node.first == key)
-                    return(get_end(tree->left));
+                    return(get_end_key(tree->left));
             if (_cmp(key, tree->node.first))
             {
                 if(tree->right && get_begin(tree->right)->node.first == key)
