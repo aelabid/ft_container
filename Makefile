@@ -6,11 +6,11 @@
 #    By: aelabid <aelabid@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/16 07:22:21 by aelabid           #+#    #+#              #
-#    Updated: 2023/03/03 22:35:03 by aelabid          ###   ########.fr        #
+#    Updated: 2023/03/04 00:03:32 by aelabid          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC = vector/testVector.cpp
+SRC = main/main_v.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
