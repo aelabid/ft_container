@@ -8,28 +8,19 @@
 
 int main()
 {
-	ft::map<int, int> m;
-  m.insert(ft::make_pair(1, 100));
-  m.insert(ft::make_pair(2, 200));
-  m.insert(ft::make_pair(0, 200));
-  m.insert(ft::make_pair(4, 200));
-  m.insert(ft::make_pair(54, 300));
-  ft::map<int,int>::reverse_iterator rit=m.rbegin();
+  ft::map<int,int> mymap;
+  ft::map<int,int>::iterator itlow,itup;
 
-  // ++rit;
-  // ++rit;
-  // ++rit;
-  // ++rit;
-  //   // std::cout << rit->first << " => " << rit->second << '\n';
-  // ++rit;
-  // ++rit;
-  while(rit != m.rend())
-  {
-    std::cout << rit->first << " => " << rit->second << '\n';
-    // std::cout<<"here";
-    ++rit;
-  }
-  for (rit=m.rbegin(); rit!=m.rend(); ++rit)
-    std::cout << rit->first << " => " << rit->second << '\n';
-
+  mymap[-20]=20;
+  mymap[2]=40;
+  // mymap[6]=60;
+  mymap[9]=80;
+  mymap[10]=100;
+  mymap[15]=100;
+  // it = mymap.begin();
+  // itlow=mymap.lower_bound(2);  // itlow points to b
+  itup=mymap.upper_bound (6);   // itup points to e (not d!)
+  std::cout<<"low = "<<itup->first;
+  // std::cout<<"low = "<<itup->first;
+  // mymap.erase(itlow,itup);        // erases [itlow,itup)
 }

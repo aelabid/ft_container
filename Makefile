@@ -6,7 +6,7 @@
 #    By: aelabid <aelabid@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/16 07:22:21 by aelabid           #+#    #+#              #
-#    Updated: 2023/03/01 11:36:43 by aelabid          ###   ########.fr        #
+#    Updated: 2023/03/03 22:35:03 by aelabid          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ all : $(NAME)
 	$(CC) -c $<  -o $@ 
 	
 $(NAME) : $(OBJ)
-	$(CC) -fsanitize=address $(OBJ) -o $(NAME)
+	$(CC) $(OBJ) -o $(NAME)
+# $(CC) -fsanitize=address $(OBJ) -o $(NAME)
 
 
 clean :

@@ -49,7 +49,7 @@ class avlTree
         }
         void    left_root_right(_t_tree<T, V>  *tree)
         {
-            if(!tree)
+            if(!tree || !tree->k)
                 return;
             left_root_right(tree->left);
             std::cout<<tree->node.first<< " "<< tree->node.second<<std::endl;
@@ -76,7 +76,7 @@ class avlTree
 
         int calcule_balance_for_one_node(_t_tree<T, V>  *tree)
         {
-            if(!tree)
+            if(!tree || (!tree->left->k && !tree->right->k))
                 return(0);
             int leftH;
             int rightH;
@@ -87,7 +87,7 @@ class avlTree
 
         void    calcule_balance_for_all_nodes(_t_tree<T, V>  *tree)
         {
-            if(!tree)
+            if(!tree || (!tree->left->k && !tree->right->k))
                 return ;
             calcule_balance_for_all_nodes(tree->left);
             tree->balance = calcule_balance_for_one_node(tree);
@@ -96,7 +96,7 @@ class avlTree
 
         _t_tree<T, V>  *right_rotation(_t_tree<T, V>  *tree)
         {
-            if(!tree->left)
+            if(!tree->left || !tree->left->k)
                 return tree;
             _t_tree<T, V>  *tmp;
             tmp = tree->left;
@@ -106,7 +106,7 @@ class avlTree
         }
         _t_tree<T, V>  *left_rotation(_t_tree<T, V>  *tree)
         {
-            if (!tree->right)
+            if (!tree->right || !tree->right->k)
                 return tree;
             _t_tree<T, V>  *tmp;
             tmp = tree->right;
@@ -116,7 +116,7 @@ class avlTree
         }
         void    left_right_root(_t_tree<T, V>  *tree)
         {
-            if(!tree)
+            if(!tree || !tree->k)
                 return;
             left_right_root(tree->left);
             left_right_root(tree->right);
@@ -124,7 +124,7 @@ class avlTree
         }
         _t_tree<T, V>     *ft_balance(_t_tree<T, V>  *tree, int balance, T key)
         {
-            if(tree->left)
+            if(tree->left && tree->left->k)
             {
                 if (balance < -1 && _cmp(key, tree->node.first))
                     tree = right_rotation(tree);
@@ -134,7 +134,7 @@ class avlTree
                     return right_rotation(tree);
                 }
             }
-            if(tree->right)
+            if(tree->right && tree->right->k)
             {
                 if(balance > 1 && _cmp(tree->node.first, key))
                     return left_rotation(tree);
@@ -147,27 +147,26 @@ class avlTree
             return (tree);
         }
 
-        T find(_t_tree<T, V>  *tree, T key)
+        _t_tree<T, V>  *find(_t_tree<T, V>  *tree, T key)
         {
-            if (!tree)
-                return (T)NULL;
+            if (!tree || !tree->k)
+                return NULL;
             if(tree->node.first == key)
-                return (key);
+                return (tree);
             else if (_cmp(key, tree->node.first))
                 return (find(tree->left, key));
             else if(_cmp(tree->node.first, key))
                 return (find(tree->right, key));
-            return (T)NULL;
+            return NULL;
         } 
         ft::pair<_t_tree<T, V>*, bool> insert(_t_tree<T, V>  *tree, T key, V val)
         {
             ft::pair<_t_tree<T, V>*, bool> ret; 
-            ret.second = 0;
-            T   tmp = find(tree, key);
+            ret.second = 1;
+            _t_tree<T, V>  *tmp = find(tree, key);
             if(tmp)
             {
-                ret.second = 1;
-                tree = delete_node(tree, tmp);
+                ret.second = 0;
             }
             tree = insert_utile(tree, key, val);
             ret.first = tree;
@@ -176,7 +175,7 @@ class avlTree
 
         _t_tree<T, V>  *insert_utile(_t_tree<T, V>  *tree, T key, V val)
         {
-            if (!tree)
+            if (!tree ||!tree->k)
                 tree = new_node(key, val);
             else if(_cmp(key, tree->node.first))
                 tree->left = insert_utile(tree->left, key, val);
@@ -190,7 +189,7 @@ class avlTree
         {
             ft::pair<T, V> key_val;
             key_val = ft::make_pair(tree->node.first, tree->node.second);
-            while(tree)
+            while(tree && tree->k)
             {
                 key_val = ft::make_pair(tree->node.first, tree->node.second); 
                 tree = tree->left;
@@ -200,19 +199,19 @@ class avlTree
 
         _t_tree<T, V>  *delete_node(_t_tree<T, V>  *tree, T key)
         {
-            if (!tree)
+            if (!tree || !tree->k)
                 return (tree);
             else if (_cmp(key, tree->node.first))
                 tree->left = delete_node(tree->left, key);
             else if (_cmp(tree->node.first, key))
                 tree->right = delete_node(tree->right, key);
-            else 
+            else
             {
-                if (!tree->left || !tree->right)
+                if ((!tree->left && !tree->left->k) || (!tree->right && !tree->right->k))
                 {
                     _t_tree<T, V>  *r, *l;
                     r = tree->right;
-                    l = tree->left;   
+                    l = tree->left;
                     _alloc.destroy(tree);
                     _alloc.deallocate(tree, 1);
                     if (l == NULL)
@@ -302,13 +301,13 @@ class avlTree
         }
         _t_tree<T, V>   *get_next(_t_tree<T, V> *tree, T key)
         {
-            if(!tree)
+            if(!tree || !tree->k)
                 return NULL;
-            if (key == tree->node.first && tree->right)
+            if (key == tree->node.first && (tree->right && tree->right->k))
                 return get_begin(tree->right);
             else
             {
-                if(tree->left && tree->left->node.first == key && !(tree->left->left->k))
+                if(tree->left->k && get_end_key(tree->left)->node.first == key)
                     return tree;
                 else if(_cmp(key, tree->node.first))
                     return get_next(tree->left, key);
@@ -327,12 +326,12 @@ class avlTree
         }
         void    clear(_t_tree<T, V> *tree)
         {
-            if (!tree)
+            if (!tree || !tree->k)
                 return ;
             clear(tree->left);
-            clear(tree->right);
             _alloc.destroy(tree);
             _alloc.deallocate(tree, 1);
+            clear(tree->right);
         }
         _t_tree<T, V>*   get_prev_key(_t_tree<T, V> *tree, T key)
         {
@@ -352,6 +351,36 @@ class avlTree
             }
             return NULL;
         };
+        _t_tree<T, V>* get_max_key(_t_tree<T, V>* tree, T key)
+        {
+            while (tree && tree->k)
+            {
+                if(tree->node.first < key && tree->right->k)
+                    tree = tree->right;
+                else if(tree->node.first > key && tree->left->k)
+                    tree = tree->left;
+                else
+                    break;                
+            }
+            if (tree->node.first < key)
+                tree = get_end(tree);
+            return tree;
+        }
+        _t_tree<T, V>* get_upper_bound(_t_tree<T, V>* tree, T key)
+        {
+            while(tree && tree->k)
+            {
+                if (tree->node.first > key && tree->left->k && get_end_key(tree->left)->node.first < key)
+                    return get_end_key(tree->left);
+                else if (tree->node.first > key && tree->left->k && get_end_key(tree->left)->node.first > key)
+                    tree = tree->left;
+                else if (tree->node.first < key && tree->right->k && get_begin(tree->right)->node.first > key)
+                    return get_begin(tree->right);
+                else if (tree->node.first < key && tree->left->k && get_end_key(tree->left)->node.first < key)
+                    tree = tree->right;
+            }
+            return tree;
+        }
         _t_tree<T, V>  *_tr;
     private:
         std::allocator<_t_tree<T, V> > _alloc;

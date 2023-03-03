@@ -18,9 +18,14 @@ class MyBidirectionalIterator
         MyBidirectionalIterator(){}
         MyBidirectionalIterator(V tree, value_type _vec)
         {
-            _tree = tree;
-            _it = _vec;
-            node = _vec->node;
+            if(_vec)
+            {
+                _tree = tree;
+                _tree._tr = tree._tr;
+                _it = _vec;
+                this->node = _vec->node;
+                // std::cout<<"vec f = "<<node.first;
+            }
         }
         ~MyBidirectionalIterator(){}
         MyBidirectionalIterator& operator=(const MyBidirectionalIterator& a)
@@ -28,16 +33,22 @@ class MyBidirectionalIterator
             if (this == &a)
                 return *this;
             this->_it = a._it;
+            _tree._tr = a._tree._tr;
             this->node = a.node;
             return *this;
         }
-        bool operator==(const MyBidirectionalIterator& a) const { return node == a.node; };
-        bool operator!=(const MyBidirectionalIterator& a) const { return node != a.node; };
+        bool operator==(const MyBidirectionalIterator& a) const { return node.first == a.node.first; };
+        bool operator!=(const MyBidirectionalIterator& a) const { return node.first != a.node.first; };
         const ft::pair<Key, Val>& operator*() const{ return node; };
         const ft::pair<Key, Val>* operator->() const { return &node; };
         MyBidirectionalIterator &operator--()
         {
             T   prev = _tree.get_prev_key(_tree._tr, node.first);
+            if(!prev->right)
+            {
+                node.first = prev->node.first;
+                return *this;
+            }
             node.first = prev->node.first;
             node.second = prev->node.second;
             return *this;
@@ -45,6 +56,17 @@ class MyBidirectionalIterator
         MyBidirectionalIterator &operator++()
         {
             T   next = _tree.get_next(_tree._tr, node.first);
+            if(!next)
+            {
+                node = _tree.get_end(_tree._tr)->node;
+                return *this;
+            }
+                // std::cout<<"here seg"<<std::endl;
+            if(!next->left)
+            {
+                node.first = next->node.first;
+                return *this;
+            }
             node.first = next->node.first;
             node.second = next->node.second;
             return *this;
