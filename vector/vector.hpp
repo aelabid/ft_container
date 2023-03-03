@@ -376,7 +376,6 @@ class vector
     };
     void clear()
     {
-        size_type i = 0;
         while(!empty())
             pop_back();
     };
@@ -406,23 +405,24 @@ bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 template <class T, class Alloc>
 bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
-    return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin());
+    return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 };
 template <class T, class Alloc>
 bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
-
+    return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin())
+                || ft::equal(lhs.begin(), lhs.end(), rhs.begin());
 };
 template <class T, class Alloc>
 bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
+    return ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
 
 };
 template <class T, class Alloc>
 bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 {
-    
+    return ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end())
+            || ft::equal(lhs.begin(), lhs.end(), rhs.begin());;
 };
-
-// understand lexicographical_compare
 }

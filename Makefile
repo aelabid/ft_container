@@ -6,7 +6,7 @@
 #    By: aelabid <aelabid@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/16 07:22:21 by aelabid           #+#    #+#              #
-#    Updated: 2023/03/04 00:03:32 by aelabid          ###   ########.fr        #
+#    Updated: 2023/03/04 00:14:08 by aelabid          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,8 +22,8 @@ CC = c++
 all : $(NAME)
 
 
-%.o: %.cpp
-	$(CC) -c $<  -o $@ 
+%.o: %.cpp vector/vector.hpp map/map.hpp iterators/iterator_traits.hpp iterators/map_it.hpp iterators/vector_it.hpp avl/avl.hpp
+	$(CC) $(CFLAGS) -c $<  -o $@ 
 	
 $(NAME) : $(OBJ)
 	$(CC) $(OBJ) -o $(NAME)

@@ -179,6 +179,7 @@ class map
     };
     iterator insert (iterator position, const value_type& val)
     {
+      (void)position;
       ft::pair<_t_tree<key_type, mapped_type>*, bool> tmp = _tree.insert(_tree._tr, val.first, val.second);
       _tree._tr = tmp.first;
       _t_tree<key_type, mapped_type>* _t = _tree.find(_tree._tr, val.first);
