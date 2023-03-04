@@ -189,8 +189,7 @@ class vector
                 _alloc.construct(&tmp[i], value_type());
             _alloc.deallocate(_vector, _capacity);
             _vector = tmp;
-            _size = n;
-            _capacity = (_size == 0) ? 1 : (_size - 1) * 2;
+            _capacity = n;
         }
     }
     // ------------------------ Element access ------------------------ //
@@ -286,7 +285,7 @@ class vector
     {
         size_type m, t = _size;
         size_type dst = position - begin();
-        if(dst < _size)
+        if(dst <= _size)
             m = _size+1;
         else
             m=dst+1; 
@@ -300,7 +299,15 @@ class vector
         _vector = temp;
         _size = (_size>dst)?_size+1 : dst+1;
         if(m>_capacity)
-        _capacity = (t == 0) ? 1 : t * 2;
+        {
+            if(t==0)
+                _capacity = 1;
+            else
+            {
+                _capacity = t*2;
+            }
+        }
+        // _capacity = (t == 0) ? 1 : t * 2;
         if (dst >= UINT_MAX)
             throw std::length_error("");
         pointer tmp = _alloc.allocate(dst);
@@ -315,13 +322,16 @@ class vector
 
     void insert (iterator position, size_type n, const value_type& val)
     {
+        size_type dst = position - begin();
+        if(dst >= _size)
+            _capacity = _size + n;
         for (size_type i =0; i < n; i++)
         {
             position = insert(position, val);
         }
     };
     template <class InputIterator>
-    void insert (iterator position, InputIterator first, InputIterator last, typename std::enable_if<!std::is_integral<InputIterator>::value>::type* = 0)
+    void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
     {
         while(first != last)
         {

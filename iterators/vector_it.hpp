@@ -125,22 +125,13 @@ public:
         *this = rev_it;
     };
     explicit my_rev_it (iterator_type it){ _crt = it; };
-    template <class Iter> 
-    Iter& operator=(const Iter& a)
-    {
-        if (this == &a)
-            return *this;
-        *this = a;
-        // this->_it = a._it;
-        return *this;
-    }
     ~my_rev_it(){};
 
     iterator_type base() const {
         return _crt;
     }
     // ------------------------Operator Overloading------------------------ //
-    T& operator*() const
+    reference operator*() const
     {
         return *(_crt - 1);
     }
