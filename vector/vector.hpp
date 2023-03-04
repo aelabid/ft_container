@@ -185,9 +185,9 @@ class vector
                 _alloc.construct(&tmp[i], _vector[i]);
                 _alloc.destroy(&_vector[i]);
             }
+            _alloc.deallocate(_vector, _capacity);
             for (size_type i=_size; i<n; i++)
                 _alloc.construct(&tmp[i], value_type());
-            _alloc.deallocate(_vector, _capacity);
             _vector = tmp;
             _capacity = n;
         }
@@ -263,15 +263,17 @@ class vector
     };
     void push_back (const value_type& val)
     {
-        size_type tmp = _size;
-        if(_size + 1 > _capacity)
+        if (_size == _capacity)
         {
-            reserve(_size + 1);
-            _alloc.destroy(&_vector[tmp]);
-            _capacity = (tmp==0) ? 1 : tmp*2;
+            size_type tmp;
+            if (_capacity == 0 )
+                tmp = 1;
+            else
+                tmp = _capacity * 2;
+            reserve(tmp);
         }
-        _alloc.construct(&_vector[tmp], val);
-        _size = tmp + 1;
+        _alloc.construct(&_vector[_size], val);
+        _size++;
     };
     void pop_back()
     {
@@ -333,10 +335,18 @@ class vector
     template <class InputIterator>
     void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
     {
-        while(first != last)
+        while(_vector == NULL && first != last)
         {
-            position = insert(position, *first);
-            first++;
+            push_back(*first);
+            position = end();
+            ++first;
+        }
+        size_type dst = position - begin();
+        while (first != last) {
+            iterator v = begin() + dst;
+            insert(v, *first);
+            ++first;
+            ++dst;
         }
     };
     iterator erase (iterator position)
