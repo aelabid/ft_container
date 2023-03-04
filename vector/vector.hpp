@@ -40,18 +40,17 @@ class vector
         // ------------------------ fill constructor ------------------------ //
         explicit vector(size_type n, const value_type &val = value_type(),                 const  allocator_type &alloc = allocator_type())
         {
-        this->_alloc = alloc;
-        this->_size = n;
-        this->_capacity = n;
-        this->_vector = this->_alloc.allocate(n);
-        for (size_type i = 0; i < n; i++)
-            this->_alloc.construct(&this->_vector[i], val);
+            this->_alloc = alloc;
+            this->_size = n;
+            this->_capacity = n;
+            this->_vector = this->_alloc.allocate(n);
+            for (size_type i = 0; i < n; i++)
+                this->_alloc.construct(&this->_vector[i], val);
         }
 
         // ------------------------ range constructor ------------------------ //
-        template <typename InputIterator,
-        typename enable_if<!is_integral<InputIterator>::value, void>::type>
-        vector (InputIterator first, InputIterator last,            const allocator_type& alloc = allocator_type())
+        template <class InputIterator>
+        vector (InputIterator first, InputIterator last,            const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
         {
             this->_alloc = alloc;
             this->_size = last - first;
@@ -85,15 +84,14 @@ class vector
     // ------------------------Operator Overloading------------------------ //
         vector& operator= (const vector& x)
         {
-            // Guard self assignment
             if (this == &x)
                 return *this;
-            this->_capacity = x._capacity;
-            this->_size = x._size;
             for(size_type i = 0; i < this->_size; i++)
                 this->_alloc.destroy(&this->_vector[i]);
             this->_alloc.deallocate(this->_vector, this->_capacity);
-            this->_alloc.allocate(x._capacity);
+            this->_vector = this->_alloc.allocate(x._capacity);
+            this->_capacity = x._capacity;
+            this->_size = x._size;
             for (size_type i = 0; i < this->_size; i++)
                 this->_alloc.construct(&this->_vector[i], x._vector[i]);
             return(*this);
@@ -182,12 +180,12 @@ class vector
         if (n > _capacity)
         {
             value_type *tmp = _alloc.allocate(n);
-            for (int i=0; i<_size; i++)
+            for (size_type i=0; i<_size; i++)
             {
                 _alloc.construct(&tmp[i], _vector[i]);
                 _alloc.destroy(&_vector[i]);
             }
-            for (int i=_size; i<n; i++)
+            for (size_type i=_size; i<n; i++)
                 _alloc.construct(&tmp[i], value_type());
             _alloc.deallocate(_vector, _capacity);
             _vector = tmp;

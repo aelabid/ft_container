@@ -26,7 +26,6 @@ class avlTree
     };
     avlTree& operator= (const avlTree& x)
     {
-        // Guard self assignment
         if (this == &x)
             return *this;
         _tr = x._tr;
@@ -53,8 +52,6 @@ class avlTree
                 return;
             left_root_right(tree->left);
             std::cout<<tree->node.first<< " "<< tree->node.second<<std::endl;
-            // if(tree->parent)
-            //     std::cout<<"parent = "<< tree->parent->node.first<<std::endl;
             left_root_right(tree->right);
         }
         int    calcule_height_one_node(_t_tree<T, V>  *tree)
