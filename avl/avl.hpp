@@ -23,6 +23,7 @@ class avlTree
     avlTree(){
         _tr = NULL;
         _i = 0;
+        _size = 0;
     };
     avlTree& operator= (const avlTree& x)
     {
@@ -35,7 +36,8 @@ class avlTree
         _t_tree<T, V>     *new_node(T key, V val)
         {
             _t_tree<T, V>  *my_new_node = _alloc.allocate(1);
-            _alloc.construct(my_new_node, (_t_tree<T, V>){ft::make_pair(key, val), my_null(), my_null(), 1});
+            _size++;
+            _alloc.construct(my_new_node, (_t_tree<T, V>){ft::make_pair(key, val), my_null(), my_null(), 1, 0});
             return my_new_node;
         }
         _t_tree<T, V> *my_null()
@@ -204,16 +206,17 @@ class avlTree
                 tree->right = delete_node(tree->right, key);
             else
             {
-                if ((!tree->left && !tree->left->k) || (!tree->right && !tree->right->k))
+                if ((!tree->left->k) || (!tree->right->k))
                 {
                     _t_tree<T, V>  *r, *l;
                     r = tree->right;
                     l = tree->left;
                     _alloc.destroy(tree);
                     _alloc.deallocate(tree, 1);
-                    if (l == NULL)
+                    _size--;
+                    if (!l->k )
                         return (r);
-                    else if (r == NULL)
+                    else if (!r->k )
                         return (l);
                 }
                 else
@@ -316,10 +319,16 @@ class avlTree
         }
         size_t get_size(_t_tree<T, V> *tree)
         {
-            if (tree == NULL)
+            if (!tree || !tree->k)
                 return 0;
             else
                 return(get_size(tree->left) + 1 + get_size(tree->right));
+        }
+        bool check_tree()
+        {
+            if (_size == 0)
+                return 0;
+            return 1;
         }
         void    clear(_t_tree<T, V> *tree)
         {
@@ -328,6 +337,7 @@ class avlTree
             clear(tree->left);
             _alloc.destroy(tree);
             _alloc.deallocate(tree, 1);
+            _size--;
             clear(tree->right);
         }
         _t_tree<T, V>*   get_prev_key(_t_tree<T, V> *tree, T key)
@@ -383,4 +393,5 @@ class avlTree
         std::allocator<_t_tree<T, V> > _alloc;
         Compare                         _cmp;
         int                               _i;
+        int                               _size;
 };

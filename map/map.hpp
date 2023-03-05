@@ -66,12 +66,12 @@ class map
       };
         // ------------------------ copy constructor ------------------------ //
 
-      map (const map& x)
+      map ( map& x)
       {
-        this->_alloc = x._alloc;
-        this->_tree = x._tree;
-        this->i = x.i;
-        this->_cmp = x._cmp;
+        _cmp = x._cmp;
+        _alloc = x._alloc;
+        _tree.clear(_tree._tr);
+        insert(x.begin(), x.end());
       };
 
         // ------------------------ Destructor ------------------------ //
@@ -95,17 +95,17 @@ class map
 
 
     // ------------------------Capacity------------------------ //
-    bool empty() const
+    bool empty()
     {
-      if(_tree)
+      if(_tree.check_tree())
         return false;
       return true;
     }
-    size_type size() const
+    size_type size() 
     {
       return (_tree.get_size(_tree._tr));
     };
-    size_type max_size() const
+    size_type max_size()
     {
       return _alloc.max_size();
     };
@@ -198,7 +198,8 @@ class map
     };
     void erase (iterator position)
     {
-      _tree.delete_node(_tree._tr, position->first);
+      // std::cout<<"deleted root = "<<_tree.delete_node(_tree._tr, position->first)->node.first<<std::endl;
+      _tree._tr = _tree.delete_node(_tree._tr, position->first);
     };
     size_type erase (const key_type& k)
     {
@@ -256,21 +257,20 @@ class map
       if(_tree.find(_tree._tr, k))
         return iterator(_tree, _tree.find(_tree._tr, k));
       else
-        return iterator(_tree, _tree.get_max_key(_tree._tr, k));
+        return iterator(_tree, _tree.get_upper_bound(_tree._tr, k));
     };
     const_iterator lower_bound (const key_type& k) const
     {
       if(_tree.find(_tree._tr, k))
         return const_iterator(_tree, _tree.find(_tree._tr, k));
       else
-        return const_iterator(_tree, _tree.get_max_key(_tree._tr, k));
-
+        return const_iterator(_tree, _tree.get_upper_bound(_tree._tr, k));
     };
     iterator upper_bound (const key_type& k)
     {
-      // if(_tree.find(_tree._tr, k))
-      //   return iterator(_tree,_tree.get_next(_tree._tr, k));
-      // else
+      if(_tree.find(_tree._tr, k))
+        return iterator(_tree,_tree.get_next(_tree._tr, k));
+      else
         return iterator(_tree, _tree.get_upper_bound(_tree._tr, k));
     };
     const_iterator upper_bound (const key_type& k) const
@@ -292,4 +292,3 @@ class map
       avlTree<key_type, mapped_type, key_compare, Alloc> _tree;
 };
 }
-// value compare not yet

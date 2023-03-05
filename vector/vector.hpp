@@ -150,7 +150,7 @@ class vector
         else if (n > _capacity)
         {
             value_type *tmp = _alloc.allocate(n);
-            for (int i=0; i<_size; i++)
+            for (size_type i=0; i<_size; i++)
             {
                 _alloc.construct(&tmp[i], _vector[i]);
                 _alloc.destroy(&_vector[i]);
@@ -287,12 +287,14 @@ class vector
     {
         size_type m, t = _size;
         size_type dst = position - begin();
+        if (dst >= UINT_MAX)
+            throw std::length_error("");
         if(dst <= _size)
             m = _size+1;
         else
             m=dst+1; 
         pointer temp = _alloc.allocate(m);
-        for (int i=0; i<_size; i++)
+        for (size_t i=0; i<_size; i++)
         {
             _alloc.construct(&temp[i], _vector[i]);
             _alloc.destroy(&_vector[i]);
@@ -300,25 +302,15 @@ class vector
         _alloc.deallocate(_vector, _capacity);
         _vector = temp;
         _size = (_size>dst)?_size+1 : dst+1;
-        if(m>_capacity)
-        {
-            if(t==0)
-                _capacity = 1;
-            else
-            {
-                _capacity = t*2;
-            }
-        }
-        // _capacity = (t == 0) ? 1 : t * 2;
-        if (dst >= UINT_MAX)
-            throw std::length_error("");
         pointer tmp = _alloc.allocate(dst);
-        value_type tm;
+        (void)tmp;
         size_type i;
         for(i = _size; i > dst; i--)
             _vector[i] = _vector[i - 1];
         _alloc.destroy(&_vector[i]);
         _alloc.construct(&_vector[i], val);
+        if(m>_capacity)
+            _capacity = (t == 0) ? 1 : t * 2;
         return  iterator(_vector + dst);
     };
 

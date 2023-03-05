@@ -3,20 +3,20 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
+#    By: aelabid <aelabid@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/16 07:22:21 by aelabid           #+#    #+#              #
-#    Updated: 2023/03/04 04:43:32 by marvin           ###   ########.fr        #
+#    Updated: 2023/03/05 05:32:19 by aelabid          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC = main/main_v.cpp
+SRC = main/main_s.cpp main/main_v.cpp main/main.cpp main/main_m.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
 NAME = containers
 
-# CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 CC = c++
 
 all : $(NAME)
@@ -27,8 +27,6 @@ all : $(NAME)
 	
 $(NAME) : $(OBJ)
 	$(CC) $(OBJ) -o $(NAME)
-# $(CC) -fsanitize=address $(OBJ) -o $(NAME)
-
 
 clean :
 	rm -f $(OBJ) 

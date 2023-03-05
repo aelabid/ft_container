@@ -1,6 +1,6 @@
 #include"../vector/vector.hpp"
 #include<vector>
-int main()
+void vector_test(void)
 {
   // -------------------------------STD::Constructors-------------------------------------//
   std::cout<<"---------------constructor test---------------\n"<<std::endl;
@@ -177,7 +177,7 @@ int main()
       myvector.resize(12);
 
       std::cout << "myvector contains:";
-      for (int i=0;i<myvector.size();i++)
+      for (size_t i=0;i<myvector.size();i++)
         std::cout << ' ' << myvector[i];
       std::cout << '\n';
 
@@ -251,7 +251,7 @@ int main()
       myvector.resize(12);
 
       std::cout << "myvector contains:";
-      for (int i=0;i<myvector.size();i++)
+      for (size_t i=0;i<myvector.size();i++)
         std::cout << ' ' << myvector[i];
       std::cout << '\n';
     }
@@ -481,8 +481,6 @@ int main()
     {
       std::cout<<"-------std::push_back"<<std::endl;
       std::vector<int> myvector;
-      int myint;
-
 
       for (int i=1; i<=10; i++) myvector.push_back(i);
 
@@ -492,8 +490,6 @@ int main()
     {
       std::cout<<"-------ft::push_back"<<std::endl;
       ft::vector<int> myvector;
-      int myint;
-
 
       for (int i=1; i<=10; i++) myvector.push_back(i);
 
@@ -639,5 +635,4 @@ int main()
       if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
       if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
     }
-  return 0;
 }
